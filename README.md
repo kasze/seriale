@@ -197,6 +197,8 @@ OMDB_API_KEY=
 CRON_SECRET=losowy-sekret-cron
 ```
 
+`APP_ENV` jest przełącznikiem wdrożeniowym w pliku `.env`. Na publicznym hostingu ustaw `APP_ENV=production`; w panelu ustawień celowo nie ma tej opcji.
+
 ## Logowanie single-user
 
 - pole logowania sprawdza zgodnosc z `SINGLE_USER_IDENTITY` albo wartoscia z `app_settings.single_user_identity`

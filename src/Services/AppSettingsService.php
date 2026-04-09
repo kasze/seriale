@@ -57,18 +57,6 @@ final class AppSettingsService
                 ],
             ],
             [
-                'key' => 'app_env',
-                'label' => 'Tryb aplikacji',
-                'type' => 'string',
-                'group' => 'appearance',
-                'input' => 'select',
-                'help' => 'Produkcyjny ukrywa debug i używa standardowej obsługi resetu hasła. Deweloperski zostawia więcej pomocniczych fallbacków.',
-                'options' => [
-                    ['value' => 'production', 'label' => 'Produkcyjny'],
-                    ['value' => 'development', 'label' => 'Deweloperski'],
-                ],
-            ],
-            [
                 'key' => 'single_user_identity',
                 'label' => 'Login użytkownika',
                 'type' => 'string',
@@ -186,7 +174,7 @@ final class AppSettingsService
         return [
             'appearance' => [
                 'label' => 'Wygląd i aplikacja',
-                'description' => 'Nazwa, motyw i tryb pracy całej aplikacji.',
+                'description' => 'Nazwa aplikacji i motyw interfejsu. Tryb production/development ustawiasz w pliku .env.',
             ],
             'account' => [
                 'label' => 'Dostęp i reset hasła',
@@ -270,7 +258,7 @@ final class AppSettingsService
 
     public function appEnv(): string
     {
-        return (string) $this->get('app_env', 'development');
+        return (string) $this->config->get('APP_ENV', 'development');
     }
 
     public function theme(): string
