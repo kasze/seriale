@@ -211,6 +211,7 @@ INSERT INTO `{{prefix}}app_settings` (`key`, `value`, `type`, `group_name`) VALU
     ('app_timezone', 'Europe/Warsaw', 'string', 'general'),
     ('single_user_identity', 'you@example.com', 'string', 'general'),
     ('cache_ttl_hours', '12', 'int', 'sync'),
+    ('episode_availability_offset_days', '1', 'int', 'sync'),
     ('provider_tvmaze_enabled', '1', 'bool', 'providers'),
     ('provider_tmdb_enabled', '0', 'bool', 'providers'),
     ('provider_omdb_enabled', '0', 'bool', 'providers'),

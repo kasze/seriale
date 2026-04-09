@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Api\Provider;
 
 use App\Api\TVMazeClient;
+use App\Services\AppSettingsService;
 use App\Support\Html;
 use App\Support\Str;
 use DateTimeImmutable;
@@ -14,7 +15,8 @@ final class TvMazeShowProvider implements ShowProviderInterface
 {
     public function __construct(
         private TVMazeClient $client,
-        private DateTimeZone $timezone
+        private DateTimeZone $timezone,
+        private AppSettingsService $settings
     ) {
     }
 
@@ -142,9 +144,9 @@ final class TvMazeShowProvider implements ShowProviderInterface
                     'episode_type' => $episode['type'] ?? null,
                     'name' => $episode['name'] ?? null,
                     'summary' => $episode['summary'] ?? null,
-                    'airdate' => $episode['airdate'] ?? null,
+                    'airdate' => $this->adjustAirdate($episode['airdate'] ?? null),
                     'airtime' => $episode['airtime'] ?? null,
-                    'airstamp' => $this->polishAvailabilityStamp($episode['airstamp'] ?? null),
+                    'airstamp' => $this->availabilityStamp($episode['airstamp'] ?? null),
                     'runtime_minutes' => $episode['runtime'] ?? null,
                     'image_url' => $episode['image']['original'] ?? $episode['image']['medium'] ?? null,
                     'is_special' => (bool) ($episode['type'] === 'significant_special' || $episode['type'] === 'insignificant_special'),
@@ -161,7 +163,7 @@ final class TvMazeShowProvider implements ShowProviderInterface
         $next = null;
 
         foreach ($episodes as $episode) {
-            $airstamp = $this->polishAvailabilityStamp($episode['airstamp'] ?? null);
+            $airstamp = $this->availabilityStamp($episode['airstamp'] ?? null);
 
             if ($airstamp === null) {
                 continue;
@@ -187,14 +189,34 @@ final class TvMazeShowProvider implements ShowProviderInterface
         ];
     }
 
-    private function polishAvailabilityStamp(?string $airstamp): ?string
+    private function availabilityStamp(?string $airstamp): ?string
     {
         if ($airstamp === null || trim($airstamp) === '') {
             return null;
         }
 
-        return (new DateTimeImmutable($airstamp))
-            ->modify('+1 day')
+        return $this->adjustDateTime(new DateTimeImmutable($airstamp))
             ->format(DATE_ATOM);
+    }
+
+    private function adjustAirdate(?string $airdate): ?string
+    {
+        if ($airdate === null || trim($airdate) === '') {
+            return null;
+        }
+
+        return $this->adjustDateTime(new DateTimeImmutable($airdate))
+            ->format('Y-m-d');
+    }
+
+    private function adjustDateTime(DateTimeImmutable $date): DateTimeImmutable
+    {
+        $offset = $this->settings->episodeAvailabilityOffsetDays();
+
+        if ($offset === 0) {
+            return $date;
+        }
+
+        return $date->modify(sprintf('%+d days', $offset));
     }
 }

@@ -69,20 +69,6 @@ final class AppSettingsService
                 ],
             ],
             [
-                'key' => 'app_timezone',
-                'label' => 'Strefa czasowa',
-                'type' => 'string',
-                'group' => 'appearance',
-                'input' => 'select',
-                'help' => 'Wpływa na daty emisji, relatywne etykiety czasu i sesje.',
-                'options' => [
-                    ['value' => 'Europe/Warsaw', 'label' => 'Europe/Warsaw'],
-                    ['value' => 'UTC', 'label' => 'UTC'],
-                    ['value' => 'Europe/London', 'label' => 'Europe/London'],
-                    ['value' => 'America/New_York', 'label' => 'America/New_York'],
-                ],
-            ],
-            [
                 'key' => 'single_user_identity',
                 'label' => 'Login użytkownika',
                 'type' => 'string',
@@ -100,6 +86,17 @@ final class AppSettingsService
                 'help' => 'Co ile godzin dane serialu mogą być odświeżane przy wejściu na stronę. Typowe wartości: 6, 12, 24.',
                 'suffix' => 'godzin',
                 'min' => 1,
+            ],
+            [
+                'key' => 'episode_availability_offset_days',
+                'label' => 'Korekta daty emisji',
+                'type' => 'int',
+                'group' => 'sync',
+                'input' => 'number',
+                'help' => 'Ile dni dodać do dat z TVmaze przed zapisaniem odcinka. Dla seriali z USA na streamingach w Polsce zwykle zostaw 1. Dla dokładnych dat z API ustaw 0.',
+                'suffix' => 'dni',
+                'min' => -7,
+                'max' => 14,
             ],
             [
                 'key' => 'cron_secret',
@@ -189,7 +186,7 @@ final class AppSettingsService
         return [
             'appearance' => [
                 'label' => 'Wygląd i aplikacja',
-                'description' => 'Nazwa, motyw, strefa czasowa i tryb pracy całej aplikacji.',
+                'description' => 'Nazwa, motyw i tryb pracy całej aplikacji.',
             ],
             'account' => [
                 'label' => 'Dostęp i reset hasła',
@@ -197,7 +194,7 @@ final class AppSettingsService
             ],
             'sync' => [
                 'label' => 'Synchronizacja',
-                'description' => 'Jak długo trzymać cache i jak zabezpieczyć ręczne odpalanie crona.',
+                'description' => 'Cache, korekta dat emisji i zabezpieczenie ręcznego odpalania crona.',
             ],
             'providers' => [
                 'label' => 'Integracje z API',
@@ -221,7 +218,10 @@ final class AppSettingsService
 
             $value = match ($definition['type']) {
                 'bool' => isset($input[$key]) ? '1' : '0',
-                'int' => (string) max(1, (int) $raw),
+                'int' => (string) min(
+                    isset($definition['max']) ? (int) $definition['max'] : PHP_INT_MAX,
+                    max(isset($definition['min']) ? (int) $definition['min'] : 0, (int) $raw)
+                ),
                 default => trim((string) $raw),
             };
 
@@ -256,6 +256,11 @@ final class AppSettingsService
     public function cacheTtlHours(): int
     {
         return max(1, (int) $this->get('cache_ttl_hours', 12));
+    }
+
+    public function episodeAvailabilityOffsetDays(): int
+    {
+        return max(-7, min(14, (int) $this->get('episode_availability_offset_days', 1)));
     }
 
     public function timezone(): string
@@ -303,6 +308,7 @@ final class AppSettingsService
             'app_theme' => (string) $this->config->get('APP_THEME', 'light'),
             'single_user_identity' => (string) $this->config->get('SINGLE_USER_IDENTITY', 'you@example.com'),
             'cache_ttl_hours' => (int) $this->config->get('CACHE_TTL_HOURS', 12),
+            'episode_availability_offset_days' => (int) $this->config->get('EPISODE_AVAILABILITY_OFFSET_DAYS', 1),
             'provider_tvmaze_enabled' => bool_value($this->config->get('TVMAZE_ENABLED', 'true')),
             'provider_omdb_enabled' => bool_value($this->config->get('OMDB_ENABLED', 'false')),
             'omdb_api_key' => (string) $this->config->get('OMDB_API_KEY', ''),

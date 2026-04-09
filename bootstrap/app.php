@@ -145,7 +145,8 @@ $container->singleton(OMDbClient::class, static fn (Container $container) => new
 ));
 $container->singleton(TvMazeShowProvider::class, static fn (Container $container) => new TvMazeShowProvider(
     $container->get(TVMazeClient::class),
-    $container->get('timezone')
+    $container->get('timezone'),
+    $container->get(AppSettingsService::class)
 ));
 $container->singleton(OmdbRatingsProvider::class, static fn (Container $container) => new OmdbRatingsProvider(
     $container->get(OMDbClient::class),
