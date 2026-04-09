@@ -10,7 +10,7 @@ $renderEpisodeFeed = static function (array $episodes, string $mode): void {
                     <span class="pill pill--aired">Wyemitowany</span>
                     <strong><?= e(relative_date((string) $episode['airstamp'])) ?></strong>
                 <?php else: ?>
-                    <span class="pill pill--upcoming">Nadchodzacy</span>
+                    <span class="pill pill--upcoming">Nadchodzący</span>
                     <strong><?= e(relative_date((string) $episode['airstamp'])) ?></strong>
                 <?php endif; ?>
             </div>
@@ -20,7 +20,7 @@ $renderEpisodeFeed = static function (array $episodes, string $mode): void {
                         <?= e((string) $episode['title']) ?>
                     </a>
                 </strong>
-                <p><?= e(sprintf('S%02dE%02d · %s · %s', (int) ($episode['season_number'] ?? 0), (int) ($episode['episode_number'] ?? 0), (string) ($episode['name'] ?? 'Bez tytulu'), format_airing_date((string) $episode['airstamp'], $episode['airtime'] ?? null))) ?></p>
+                <p><?= e(sprintf('S%02dE%02d · %s · %s', (int) ($episode['season_number'] ?? 0), (int) ($episode['episode_number'] ?? 0), (string) ($episode['name'] ?? 'Bez tytułu'), format_airing_date((string) $episode['airstamp'], $episode['airtime'] ?? null))) ?></p>
             </div>
             <?php if ($mode === 'past'): ?>
                 <div class="episode-feed__actions">
@@ -34,11 +34,11 @@ $renderEpisodeFeed = static function (array $episodes, string $mode): void {
 ?>
 <section class="section">
     <?php if ($dashboard['recently_aired'] === [] && $dashboard['upcoming'] === []): ?>
-        <div class="empty-state">Brak odcinkow w oknie ostatnich i najblizszych 7 dni.</div>
+        <div class="empty-state">Brak odcinków z ostatniego tygodnia i zapowiedzi na najbliższy tydzień.</div>
     <?php else: ?>
         <?php if ($dashboard['recently_aired'] !== []): ?>
             <div class="section__subhead">
-                <h3>Ostatni tydzien</h3>
+                <h3>Ostatni tydzień</h3>
             </div>
             <div class="episode-feed">
                 <?php $renderEpisodeFeed($dashboard['recently_aired'], 'past'); ?>
@@ -47,7 +47,7 @@ $renderEpisodeFeed = static function (array $episodes, string $mode): void {
 
         <?php if ($dashboard['upcoming'] !== []): ?>
             <div class="section__subhead">
-                <h3>Nadchodzacy tydzien</h3>
+                <h3>Nadchodzący tydzień</h3>
             </div>
             <div class="episode-feed">
                 <?php $renderEpisodeFeed($dashboard['upcoming'], 'future'); ?>
@@ -58,11 +58,11 @@ $renderEpisodeFeed = static function (array $episodes, string $mode): void {
     <div class="stack stack--spaced">
         <details class="disclosure">
             <summary class="disclosure__summary">
-                <span>Wyemitowane dawniej niz tydzien temu</span>
+                <span>Wyemitowane dawniej niż tydzień temu</span>
                 <span class="pill pill--muted"><?= e((string) count($dashboard['older_aired'])) ?></span>
             </summary>
             <?php if ($dashboard['older_aired'] === []): ?>
-                <div class="empty-state empty-state--soft">Brak starszych wyemitowanych odcinkow.</div>
+                <div class="empty-state empty-state--soft">Brak starszych wyemitowanych odcinków.</div>
             <?php else: ?>
                 <div class="episode-feed">
                     <?php $renderEpisodeFeed($dashboard['older_aired'], 'past'); ?>
@@ -72,7 +72,7 @@ $renderEpisodeFeed = static function (array $episodes, string $mode): void {
 
         <details class="disclosure">
             <summary class="disclosure__summary">
-                <span>Nadchodzace w przyszlosci</span>
+                <span>Nadchodzące w przyszłości</span>
                 <span class="pill pill--muted"><?= e((string) count($dashboard['future_later'])) ?></span>
             </summary>
             <?php if ($dashboard['future_later'] === []): ?>
@@ -95,16 +95,16 @@ $renderEpisodeFeed = static function (array $episodes, string $mode): void {
             <label class="field field--inline">
                 <span class="field-label">Sortuj</span>
                 <select class="input" name="sort">
-                    <option value="next" <?= $sort === 'next' ? 'selected' : '' ?>>Najblizszy odcinek</option>
+                    <option value="next" <?= $sort === 'next' ? 'selected' : '' ?>>Najbliższy odcinek</option>
                     <option value="title" <?= $sort === 'title' ? 'selected' : '' ?>>Alfabetycznie</option>
                     <option value="added" <?= $sort === 'added' ? 'selected' : '' ?>>Data dodania</option>
                 </select>
             </label>
-            <button type="submit" class="button button--ghost">Zmien</button>
+            <button type="submit" class="button button--ghost">Zmień</button>
         </form>
     </div>
     <?php if ($dashboard['tracked'] === []): ?>
-        <div class="empty-state">Nie obserwujesz jeszcze zadnych seriali. Zacznij od wyszukania tytulu.</div>
+        <div class="empty-state">Nie obserwujesz jeszcze żadnych seriali. Zacznij od wyszukania tytułu.</div>
     <?php else: ?>
         <div class="show-grid">
             <?php foreach ($dashboard['tracked'] as $item): ?>

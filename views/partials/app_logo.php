@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Logo aplikacji do sledzenia odcinkow seriali" class="episode-logo">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Logo aplikacji do śledzenia odcinków seriali" class="episode-logo">
     <circle class="bg" cx="64" cy="64" r="60"/>
     <circle class="ring" cx="64" cy="64" r="42"/>
     <circle class="dot-active" cx="64" cy="22" r="7"/>

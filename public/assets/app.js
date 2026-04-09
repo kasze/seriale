@@ -21,7 +21,7 @@ const translateShowStatus = (status) => {
         case "running":
             return "W emisji";
         case "ended":
-            return "Zakonczony";
+            return "Zakończony";
         case "to be determined":
             return "Do ustalenia";
         case "in development":
@@ -55,7 +55,7 @@ const relativeCountdown = (iso) => {
     const diffMs = target.getTime() - Date.now();
 
     if (diffMs <= 0) {
-        return "Juz po premierze";
+        return "Już wyemitowany";
     }
 
     const dayMs = 24 * 60 * 60 * 1000;
@@ -96,12 +96,12 @@ const relativeCountdown = (iso) => {
 
     if (diffMs >= monthMs) {
         const months = Math.floor(diffMs / monthMs);
-        return `za ${months} ${plural(months, "miesiac", "miesiace", "miesiecy")}`;
+        return `za ${months} ${plural(months, "miesiąc", "miesiące", "miesięcy")}`;
     }
 
     if (diffMs >= weekMs) {
         const weeks = Math.floor(diffMs / weekMs);
-        return `za ${weeks} ${plural(weeks, "tydzien", "tygodnie", "tygodni")}`;
+        return `za ${weeks} ${plural(weeks, "tydzień", "tygodnie", "tygodni")}`;
     }
 
     return `za ${Math.round(hours / 24)} dni`;
@@ -167,7 +167,7 @@ const initSearchWidget = (widget) => {
 
             if (!items.length) {
                 results.hidden = false;
-                results.innerHTML = `<div class="empty-state">Brak wynikow dla tego zapytania.</div>`;
+                results.innerHTML = `<div class="empty-state">Brak wyników dla tego zapytania.</div>`;
                 return;
             }
 

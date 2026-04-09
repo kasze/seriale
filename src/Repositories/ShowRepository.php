@@ -158,7 +158,7 @@ final class ShowRepository extends BaseRepository
             'provider_payload' => $this->encodeJson($data['provider_payload']),
         ]);
 
-        return $this->findBySource((string) $data['source_provider'], (string) $data['source_id']) ?? throw new \RuntimeException('Nie udalo sie zapisac serialu.');
+        return $this->findBySource((string) $data['source_provider'], (string) $data['source_id']) ?? throw new \RuntimeException('Nie udało się zapisać serialu.');
     }
 
     public function replaceExternalId(int $showId, string $provider, string $externalId, string $type = 'show', array $meta = []): void

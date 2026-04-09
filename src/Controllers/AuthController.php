@@ -45,12 +45,12 @@ final class AuthController extends Controller
         $this->session->flash('old_input', ['identity' => $identity]);
 
         if ($this->auth->authenticate($identity, $password, $remember)) {
-            $this->session->flash('success', 'Zalogowano pomyslnie.');
+            $this->session->flash('success', 'Zalogowano.');
 
             return $this->redirect('/dashboard');
         }
 
-        $this->session->flash('error', 'Login lub haslo sa nieprawidlowe.');
+        $this->session->flash('error', 'Login lub hasło są nieprawidłowe.');
 
         return $this->redirect('/login');
     }
@@ -63,7 +63,7 @@ final class AuthController extends Controller
 
         try {
             $result = $this->auth->requestPasswordReset($identity, $request->ip());
-            $this->session->flash('success', 'Link do resetu hasla zostal wyslany.');
+            $this->session->flash('success', 'Link do resetu hasła został wysłany.');
 
             if ($this->settings->isDevelopment() || (($result['mail']['transport'] ?? '') === 'log') || !($result['mail']['sent'] ?? false)) {
                 $this->session->flash('dev_reset_link', $result);
@@ -84,13 +84,13 @@ final class AuthController extends Controller
         $token = trim((string) $request->query('token', ''));
 
         if (!$this->auth->validPasswordResetToken($token)) {
-            $this->session->flash('error', 'Link resetu hasla jest nieprawidlowy lub wygasl.');
+            $this->session->flash('error', 'Link resetu hasła jest nieprawidłowy albo wygasł.');
 
             return $this->redirect('/login');
         }
 
         return $this->render('auth/reset', [
-            'pageTitle' => 'Ustaw nowe haslo',
+            'pageTitle' => 'Ustaw nowe hasło',
             'token' => $token,
             'identity' => $this->settings->singleUserIdentity(),
         ]);
@@ -104,14 +104,14 @@ final class AuthController extends Controller
         $passwordConfirm = (string) $request->input('password_confirm', '');
 
         if ($password !== $passwordConfirm) {
-            $this->session->flash('error', 'Hasla nie sa takie same.');
+            $this->session->flash('error', 'Hasła nie są takie same.');
 
             return $this->redirect('/password/reset?token=' . urlencode($token));
         }
 
         try {
             if ($this->auth->resetPassword($token, $password)) {
-                $this->session->flash('success', 'Haslo zostalo ustawione, a sesja jest juz aktywna.');
+                $this->session->flash('success', 'Hasło zostało ustawione. Jesteś zalogowany.');
 
                 return $this->redirect('/dashboard');
             }
@@ -121,7 +121,7 @@ final class AuthController extends Controller
             return $this->redirect('/password/reset?token=' . urlencode($token));
         }
 
-        $this->session->flash('error', 'Link resetu hasla jest nieprawidlowy lub wygasl.');
+        $this->session->flash('error', 'Link resetu hasła jest nieprawidłowy albo wygasł.');
 
         return $this->redirect('/login');
     }

@@ -10,7 +10,7 @@ $compact = false;
 <section class="section">
     <div class="section__head">
         <h1>Dodawanie seriali</h1>
-        <p>Autocomplete pobiera wyniki z TVmaze po kazdej wpisanej literze. Klikniecie wyniku od razu dodaje serial do obserwowanych.</p>
+        <p>Wpisz tytuł i wybierz serial z listy wyników. Kliknięcie wyniku od razu dodaje serial do obserwowanych.</p>
     </div>
     <?php require base_path('views/partials/search_widget.php'); ?>
 </section>
@@ -18,11 +18,11 @@ $compact = false;
 <section class="section">
     <div class="section__head">
         <h2>Wyniki wyszukiwania</h2>
-        <p><?= $query !== '' ? 'Zapytanie: ' . e($query) : 'Wpisz co najmniej 2 znaki, aby zaczac.' ?></p>
+        <p><?= $query !== '' ? 'Zapytanie: ' . e($query) : 'Wpisz co najmniej 2 znaki, aby zacząć.' ?></p>
     </div>
 
     <?php if ($query !== '' && $results === []): ?>
-        <div class="empty-state">Brak wynikow dla tego zapytania.</div>
+        <div class="empty-state">Brak wyników dla tego zapytania.</div>
     <?php elseif ($results !== []): ?>
         <div class="search-page-results">
             <?php foreach ($results as $result): ?>

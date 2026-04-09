@@ -17,20 +17,20 @@ $authPage = true;
                 <input class="input" type="email" name="identity" value="<?= e((string) old('identity', $identity)) ?>" required autocomplete="username" autocapitalize="none" spellcheck="false">
             </label>
             <label class="field">
-                <span class="field-label">Haslo</span>
+                <span class="field-label">Hasło</span>
                 <input class="input" type="password" name="password" required autocomplete="current-password">
             </label>
             <label class="checkbox-field auth-card__remember">
                 <input type="checkbox" name="remember" value="1">
                 <span>Zapamiętaj mnie na tym urządzeniu</span>
             </label>
-            <button type="submit" class="button button--primary">Wejdz</button>
+            <button type="submit" class="button button--primary">Wejdź</button>
         </form>
 
         <form method="post" action="<?= e(path_url('/password/forgot')) ?>" class="inline-form auth-card__footer">
             <?= csrf_field() ?>
             <input type="hidden" name="identity" value="<?= e($identity) ?>">
-            <button type="submit" class="button button--ghost">Resetuj haslo</button>
+            <button type="submit" class="button button--ghost">Resetuj hasło</button>
         </form>
 
         <?php if (is_array($devResetLink ?? null)): ?>

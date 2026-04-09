@@ -14,7 +14,7 @@ if ($seasonNumber !== null && $seasonNumber > 0) {
     } elseif ($seasonFutureCount > 0) {
         $seasonStatusLabel = sprintf('Sezon %d nadchodzi', $seasonNumber);
     } else {
-        $seasonStatusLabel = sprintf('Sezon %d zakonczony', $seasonNumber);
+        $seasonStatusLabel = sprintf('Sezon %d zakończony', $seasonNumber);
     }
 }
 
@@ -59,7 +59,7 @@ if ($seasonStatusLabel !== null) {
                 <dd><?= e((string) ($item['last_episode_label'] ?? 'Brak')) ?></dd>
             </div>
             <div>
-                <dt>Nastepny</dt>
+                <dt>Następny</dt>
                 <dd><?= e((string) ($item['next_episode_label'] ?? 'Brak zapowiedzi')) ?></dd>
             </div>
             <div>
@@ -76,7 +76,7 @@ if ($seasonStatusLabel !== null) {
             </div>
         </dl>
         <div class="show-card__actions">
-            <a class="button" href="<?= e(path_url('/shows/' . (string) $item['id'])) ?>">Szczegoly</a>
+            <a class="button" href="<?= e(path_url('/shows/' . (string) $item['id'])) ?>">Szczegóły</a>
             <form method="post" action="<?= e(path_url('/shows/' . (string) $item['id'] . '/untrack')) ?>" class="inline-form" onsubmit="return confirm('Usunąć ten serial z obserwowanych?')">
                 <?= csrf_field() ?>
                 <button type="submit" class="button button--ghost" onclick="return confirm('Usunąć ten serial z obserwowanych?')">Usuń</button>

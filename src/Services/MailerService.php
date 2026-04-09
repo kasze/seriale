@@ -58,9 +58,9 @@ final class MailerService
 
     public function sendPasswordReset(string $identity, string $link, string $expiresAt): array
     {
-        $subject = 'Reset hasla do aplikacji Seriale';
+        $subject = 'Reset hasła do aplikacji Seriale';
         $body = implode("\n\n", [
-            'Kliknij w link, aby ustawic nowe haslo:',
+            'Kliknij link, aby ustawić nowe hasło:',
             $link,
             'Wazny do: ' . $expiresAt,
         ]);

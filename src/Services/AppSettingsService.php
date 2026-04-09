@@ -41,7 +41,7 @@ final class AppSettingsService
                 'type' => 'string',
                 'group' => 'appearance',
                 'input' => 'text',
-                'help' => 'Nazwa widoczna w naglowku i tytule strony.',
+                'help' => 'Nazwa widoczna w nagłówku i tytule strony.',
                 'placeholder' => 'Seriale',
             ],
             [
@@ -50,7 +50,7 @@ final class AppSettingsService
                 'type' => 'string',
                 'group' => 'appearance',
                 'input' => 'select',
-                'help' => 'Jasny utrzymuje obecny wyglad. Ciemny przelacza cala aplikacje, lacznie z logowaniem i ustawieniami, na nocny wariant.',
+                'help' => 'Jasny utrzymuje dzienny wygląd. Ciemny przełącza całą aplikację, łącznie z logowaniem i ustawieniami, na nocny wariant.',
                 'options' => [
                     ['value' => 'light', 'label' => 'Jasny'],
                     ['value' => 'dark', 'label' => 'Ciemny'],
@@ -62,10 +62,10 @@ final class AppSettingsService
                 'type' => 'string',
                 'group' => 'appearance',
                 'input' => 'select',
-                'help' => 'Production ukrywa debug i traktuje logowanie oraz maile jako produkcyjne. Development zostawia wiecej pomocniczych fallbackow.',
+                'help' => 'Produkcyjny ukrywa debug i używa standardowej obsługi resetu hasła. Deweloperski zostawia więcej pomocniczych fallbacków.',
                 'options' => [
-                    ['value' => 'production', 'label' => 'Production'],
-                    ['value' => 'development', 'label' => 'Development'],
+                    ['value' => 'production', 'label' => 'Produkcyjny'],
+                    ['value' => 'development', 'label' => 'Deweloperski'],
                 ],
             ],
             [
@@ -74,7 +74,7 @@ final class AppSettingsService
                 'type' => 'string',
                 'group' => 'appearance',
                 'input' => 'select',
-                'help' => 'Wplywa na daty premier, relatywne etykiety czasu i sesje.',
+                'help' => 'Wpływa na daty emisji, relatywne etykiety czasu i sesje.',
                 'options' => [
                     ['value' => 'Europe/Warsaw', 'label' => 'Europe/Warsaw'],
                     ['value' => 'UTC', 'label' => 'UTC'],
@@ -84,11 +84,11 @@ final class AppSettingsService
             ],
             [
                 'key' => 'single_user_identity',
-                'label' => 'Login uzytkownika',
+                'label' => 'Login użytkownika',
                 'type' => 'string',
                 'group' => 'account',
                 'input' => 'email',
-                'help' => 'Jedyny dozwolony login do aplikacji. Reset hasla zawsze idzie na ten adres.',
+                'help' => 'Jedyny dozwolony login do aplikacji. Reset hasła zawsze idzie na ten adres.',
                 'placeholder' => 'you@example.com',
             ],
             [
@@ -97,7 +97,7 @@ final class AppSettingsService
                 'type' => 'int',
                 'group' => 'sync',
                 'input' => 'number',
-                'help' => 'Co ile godzin dane serialu moga byc odswiezane lazy refresh. Typowe wartosci: 6, 12, 24.',
+                'help' => 'Co ile godzin dane serialu mogą być odświeżane przy wejściu na stronę. Typowe wartości: 6, 12, 24.',
                 'suffix' => 'godzin',
                 'min' => 1,
             ],
@@ -107,7 +107,7 @@ final class AppSettingsService
                 'type' => 'string',
                 'group' => 'sync',
                 'input' => 'text',
-                'help' => 'Tajny klucz do recznego lub cyklicznego odpalania /cron/sync. Powinien byc dlugi i losowy.',
+                'help' => 'Tajny klucz do ręcznego lub cyklicznego odpalania /cron/sync. Powinien być długi i losowy.',
                 'placeholder' => 'np. dlugi-losowy-sekret',
             ],
             [
@@ -115,14 +115,14 @@ final class AppSettingsService
                 'label' => 'TVmaze',
                 'type' => 'bool',
                 'group' => 'providers',
-                'help' => 'Glowny provider seriali, sezonow i odcinkow. W praktyce powinien pozostac wlaczony.',
+                'help' => 'Główne źródło seriali, sezonów i odcinków. W praktyce powinno pozostać włączone.',
             ],
             [
                 'key' => 'provider_tmdb_enabled',
                 'label' => 'TMDb',
                 'type' => 'bool',
                 'group' => 'providers',
-                'help' => 'Dostarcza podobne seriale i rekomendacje w szczegolach serialu. Wymaga klucza API TMDb.',
+                'help' => 'Dostarcza topki, podobne seriale i rekomendacje w szczegółach serialu. Wymaga klucza API TMDb.',
             ],
             [
                 'key' => 'tmdb_api_key',
@@ -130,7 +130,7 @@ final class AppSettingsService
                 'type' => 'string',
                 'group' => 'providers',
                 'input' => 'text',
-                'help' => 'Wklej klucz API z themoviedb.org. Uzywany do sekcji podobnych seriali.',
+                'help' => 'Wklej klucz API z themoviedb.org. Używany do topek, podobnych seriali i rekomendacji.',
                 'placeholder' => 'wklej klucz TMDb',
                 'nullable' => true,
             ],
@@ -139,7 +139,7 @@ final class AppSettingsService
                 'label' => 'OMDb',
                 'type' => 'bool',
                 'group' => 'providers',
-                'help' => 'Uzupelnia IMDb, Rotten Tomatoes i Metacritic. Wymaga klucza API OMDb.',
+                'help' => 'Uzupełnia IMDb, Rotten Tomatoes i Metacritic. Wymaga klucza API OMDb.',
             ],
             [
                 'key' => 'omdb_api_key',
@@ -147,7 +147,7 @@ final class AppSettingsService
                 'type' => 'string',
                 'group' => 'providers',
                 'input' => 'text',
-                'help' => 'Wklej klucz API z omdbapi.com. Po zapisaniu i odswiezeniu seriali pojawia sie IMDb, Rotten Tomatoes i Metacritic.',
+                'help' => 'Wklej klucz API z omdbapi.com. Po zapisaniu i odświeżeniu seriali mogą pojawić się IMDb, Rotten Tomatoes i Metacritic.',
                 'placeholder' => 'wklej klucz OMDb',
                 'nullable' => true,
             ],
@@ -157,7 +157,7 @@ final class AppSettingsService
                 'type' => 'string',
                 'group' => 'account',
                 'input' => 'select',
-                'help' => 'Mail wysyla prawdziwy email przez wbudowane mail(). Log nie wysyla nic i tylko zapisuje link resetu w logach / fallbackach.',
+                'help' => 'Mail wysyła wiadomość przez wbudowane mail(). Log nie wysyła nic i zapisuje link resetu tylko w logach / fallbackach.',
                 'options' => [
                     ['value' => 'mail', 'label' => 'mail'],
                     ['value' => 'log', 'label' => 'log'],
@@ -169,7 +169,7 @@ final class AppSettingsService
                 'type' => 'string',
                 'group' => 'account',
                 'input' => 'email',
-                'help' => 'Adres From uzywany przy mailach resetu hasla. Typowo no-reply@twojadomena.pl.',
+                'help' => 'Adres From używany przy mailach resetu hasła. Typowo no-reply@twojadomena.pl.',
                 'placeholder' => 'no-reply@example.com',
             ],
             [
@@ -178,7 +178,7 @@ final class AppSettingsService
                 'type' => 'string',
                 'group' => 'account',
                 'input' => 'text',
-                'help' => 'Nazwa wyswietlana w skrzynce pocztowej odbiorcy.',
+                'help' => 'Nazwa wyświetlana w skrzynce pocztowej odbiorcy.',
                 'placeholder' => 'Seriale',
             ],
         ];
@@ -188,20 +188,20 @@ final class AppSettingsService
     {
         return [
             'appearance' => [
-                'label' => 'Wyglad i aplikacja',
-                'description' => 'Nazwa, motyw, strefa czasowa i tryb pracy calej aplikacji.',
+                'label' => 'Wygląd i aplikacja',
+                'description' => 'Nazwa, motyw, strefa czasowa i tryb pracy całej aplikacji.',
             ],
             'account' => [
-                'label' => 'Dostep i reset hasla',
-                'description' => 'Login single-user oraz ustawienia techniczne maila do resetu hasla.',
+                'label' => 'Dostęp i reset hasła',
+                'description' => 'Login single-user oraz ustawienia techniczne maila do resetu hasła.',
             ],
             'sync' => [
                 'label' => 'Synchronizacja',
-                'description' => 'Jak dlugo trzymac cache i jak zabezpieczyc reczne odpalanie crona.',
+                'description' => 'Jak długo trzymać cache i jak zabezpieczyć ręczne odpalanie crona.',
             ],
             'providers' => [
                 'label' => 'Integracje z API',
-                'description' => 'Zrodla seriali, rekomendacji i ocen z zewnetrznych serwisow.',
+                'description' => 'Źródła seriali, rekomendacji i ocen z zewnętrznych serwisów.',
             ],
         ];
     }
@@ -229,12 +229,12 @@ final class AppSettingsService
                 $allowed = array_map(static fn (array $option) => (string) $option['value'], $definition['options']);
 
                 if (!in_array($value, $allowed, true)) {
-                    throw new InvalidArgumentException("Pole {$definition['label']} ma nieprawidlowa wartosc.");
+                    throw new InvalidArgumentException("Pole {$definition['label']} ma nieprawidłową wartość.");
                 }
             }
 
             if ($definition['type'] === 'string' && !($definition['nullable'] ?? false) && $value === '') {
-                throw new InvalidArgumentException("Pole {$definition['label']} nie moze byc puste.");
+                throw new InvalidArgumentException("Pole {$definition['label']} nie może być puste.");
             }
 
             $payload[$key] = [

@@ -99,7 +99,7 @@ final class AuthService
         $allowed = $this->settings->singleUserIdentity();
 
         if ($normalized === '' || $normalized !== $allowed) {
-            throw new HttpException(422, 'Nieprawidlowa tozsamosc logowania.');
+            throw new HttpException(422, 'Nieprawidłowy login.');
         }
 
         $user = $this->users->findOrCreateSingleUser($normalized);
@@ -137,7 +137,7 @@ final class AuthService
         $allowed = $this->settings->singleUserIdentity();
 
         if ($normalized === '' || $normalized !== $allowed) {
-            throw new HttpException(422, 'Nieprawidlowy login.');
+            throw new HttpException(422, 'Nieprawidłowy login.');
         }
 
         $user = $this->users->findOrCreateSingleUser($normalized);
@@ -184,7 +184,7 @@ final class AuthService
         $password = trim($password);
 
         if (mb_strlen($password) < 10) {
-            throw new HttpException(422, 'Haslo musi miec co najmniej 10 znakow.');
+            throw new HttpException(422, 'Hasło musi mieć co najmniej 10 znaków.');
         }
 
         $this->users->updatePasswordHash((int) $row['user_id'], password_hash($password, PASSWORD_DEFAULT));

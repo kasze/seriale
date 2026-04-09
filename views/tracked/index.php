@@ -6,18 +6,18 @@ declare(strict_types=1);
     <div class="section__head section__head--split">
         <div>
             <h1>Obserwowane seriale</h1>
-            <p>Pelna lista z sortowaniem po dacie kolejnego odcinka, alfabetycznie albo dacie dodania.</p>
+            <p>Pełna lista obserwowanych tytułów i terminów emisji.</p>
         </div>
         <form method="get" action="<?= e(path_url('/tracked')) ?>" class="inline-form">
             <label class="field field--inline">
                 <span class="field-label">Sortuj</span>
                 <select class="input" name="sort">
-                    <option value="next" <?= $sort === 'next' ? 'selected' : '' ?>>Najblizszy odcinek</option>
+                    <option value="next" <?= $sort === 'next' ? 'selected' : '' ?>>Najbliższy odcinek</option>
                     <option value="title" <?= $sort === 'title' ? 'selected' : '' ?>>Alfabetycznie</option>
                     <option value="added" <?= $sort === 'added' ? 'selected' : '' ?>>Data dodania</option>
                 </select>
             </label>
-            <button type="submit" class="button button--ghost">Zmien</button>
+            <button type="submit" class="button button--ghost">Zmień</button>
         </form>
     </div>
     <?php if ($items === []): ?>

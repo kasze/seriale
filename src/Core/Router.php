@@ -74,7 +74,7 @@ final class Router
                 'line' => $throwable->getLine(),
             ]);
 
-            return $this->renderError(500, $this->config->bool('app.debug', false) ? $throwable->getMessage() : 'Wystapil nieoczekiwany blad aplikacji.');
+            return $this->renderError(500, $this->config->bool('app.debug', false) ? $throwable->getMessage() : 'Wystąpił nieoczekiwany błąd aplikacji.');
         }
     }
 

@@ -41,7 +41,7 @@ $externalRatings = array_values(array_filter([
             <?php endforeach; ?>
             <span class="pill <?= e($showStatusClass) ?>"><?= e(translate_show_status((string) ($show['status'] ?? ''))) ?></span>
             <span class="pill pill--muted"><?= e((string) ($show['network_name'] ?: $show['web_channel_name'] ?: 'Brak platformy')) ?></span>
-            <span class="pill pill--muted"><?= e((string) ($show['language'] ?: 'Brak jezyka')) ?></span>
+            <span class="pill pill--muted"><?= e((string) ($show['language'] ?: 'Brak języka')) ?></span>
         </div>
         <div class="show-hero__actions">
             <form method="post" action="<?= e(path_url('/shows/' . (string) $show['id'] . '/refresh')) ?>" class="inline-form">
@@ -75,7 +75,7 @@ $externalRatings = array_values(array_filter([
                 <dd><?= e((string) (($show['last_episode_label'] ?? 'Brak') . (!empty($show['last_episode_air_at']) ? ' · ' . format_date((string) $show['last_episode_air_at'], false) : ''))) ?></dd>
             </div>
             <div>
-                <dt>Nastepny odcinek</dt>
+                <dt>Następny odcinek</dt>
                 <dd><?= e((string) (($show['next_episode_label'] ?? 'Brak zapowiedzi') . (!empty($show['next_episode_air_at']) ? ' · ' . format_date((string) $show['next_episode_air_at'], false) : ''))) ?></dd>
             </div>
             <div>
@@ -86,7 +86,7 @@ $externalRatings = array_values(array_filter([
     </article>
 
     <article class="panel">
-        <h2>Ratingi i linki</h2>
+        <h2>Oceny i linki</h2>
         <div class="rating-grid">
             <div class="rating-box">
                 <span class="rating-box__label">TVmaze</span>
@@ -103,7 +103,7 @@ $externalRatings = array_values(array_filter([
             <?php endforeach; ?>
         </div>
         <?php if ($externalRatings === []): ?>
-            <p class="muted rating-note">OMDb nie zwrocilo tu dodatkowych ocen z IMDb, Rotten Tomatoes ani Metacritic.</p>
+            <p class="muted rating-note">Brak dodatkowych ocen z IMDb, Rotten Tomatoes lub Metacritic.</p>
         <?php endif; ?>
         <ul class="link-list">
             <?php if (!empty($show['imdb_url'])): ?><li><a href="<?= e((string) $show['imdb_url']) ?>" target="_blank" rel="noreferrer">IMDb</a></li><?php endif; ?>
@@ -122,10 +122,10 @@ $externalRatings = array_values(array_filter([
     <section class="section">
         <div class="section__head">
             <h2>Podobne seriale</h2>
-            <p>Podpowiedzi z TMDb. Kliknięcie przenosi do wyszukania serialu w tej aplikacji.</p>
+            <p>Propozycje oparte na podobieństwie, obsadzie, gatunkach i popularności.</p>
         </div>
         <?php if ($recommendedShows === [] && $relatedShows === []): ?>
-            <div class="empty-state empty-state--soft">TMDb nie zwróciło tu sensownych rekomendacji.</div>
+            <div class="empty-state empty-state--soft">Nie znaleziono sensownych propozycji dla tego serialu.</div>
         <?php else: ?>
             <div class="tab-strip" data-tabs>
                 <div class="tab-strip__nav" role="tablist" aria-label="Podobne seriale">
@@ -134,7 +134,7 @@ $externalRatings = array_values(array_filter([
                 </div>
                 <div class="tab-strip__panel<?= $defaultTab === 'recommended' ? ' is-active' : '' ?>" data-tab-panel="recommended" role="tabpanel" <?= $defaultTab === 'recommended' ? '' : 'hidden' ?>>
                     <?php if ($recommendedShows === []): ?>
-                        <div class="empty-state empty-state--soft">TMDb nie zwróciło polecanych seriali dla tej pozycji.</div>
+                        <div class="empty-state empty-state--soft">Brak polecanych seriali dla tej pozycji.</div>
                     <?php else: ?>
                         <div class="related-grid">
                             <?php foreach ($recommendedShows as $item): ?>
@@ -192,7 +192,7 @@ $externalRatings = array_values(array_filter([
                 </div>
                 <div class="tab-strip__panel<?= $defaultTab === 'similar' ? ' is-active' : '' ?>" data-tab-panel="similar" role="tabpanel" <?= $defaultTab === 'similar' ? '' : 'hidden' ?>>
                     <?php if ($relatedShows === []): ?>
-                        <div class="empty-state empty-state--soft">TMDb nie zwróciło podobnych seriali dla tej pozycji.</div>
+                        <div class="empty-state empty-state--soft">Brak podobnych seriali dla tej pozycji.</div>
                     <?php else: ?>
                         <div class="related-grid">
                             <?php foreach ($relatedShows as $item): ?>
@@ -256,10 +256,10 @@ $externalRatings = array_values(array_filter([
 <section class="section">
     <div class="section__head">
         <h2>Sezony i odcinki</h2>
-        <p>Najnowszy wyemitowany i najblizszy nadchodzacy odcinek sa wyroznione.</p>
+        <p>Najnowszy wyemitowany i najbliższy nadchodzący odcinek są wyróżnione.</p>
     </div>
     <?php if ($seasonGroups === []): ?>
-        <div class="empty-state">Brak zsynchronizowanych odcinkow.</div>
+        <div class="empty-state">Brak zsynchronizowanych odcinków.</div>
     <?php else: ?>
         <div class="season-stack">
             <?php foreach ($seasonGroups as $group): ?>
@@ -274,7 +274,7 @@ $externalRatings = array_values(array_filter([
                                 <div class="episode-row__index"><?= e(sprintf('S%02dE%02d', (int) ($episode['season_number'] ?? 0), (int) ($episode['episode_number'] ?? 0))) ?></div>
                                 <div class="episode-row__body">
                                     <div class="episode-row__title-row">
-                                        <strong><?= e((string) ($episode['name'] ?? 'Bez tytulu')) ?></strong>
+                                        <strong><?= e((string) ($episode['name'] ?? 'Bez tytułu')) ?></strong>
                                         <span class="pill <?= !empty($episode['is_next']) ? 'pill--upcoming' : 'pill--aired' ?>"><?= e((string) $episode['status_label']) ?></span>
                                     </div>
                                     <p><?= e((string) $episode['summary_text']) ?></p>

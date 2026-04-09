@@ -102,7 +102,7 @@ final class DateHelper
             $unit = self::plural($value, 'miesiac', 'miesiace', 'miesiecy');
         } elseif ($seconds >= self::WEEK) {
             $value = (int) floor($seconds / self::WEEK);
-            $unit = self::plural($value, 'tydzien', 'tygodnie', 'tygodni');
+            $unit = self::plural($value, 'tydzień', 'tygodnie', 'tygodni');
         } else {
             $value = $days;
             $unit = self::plural($value, 'dzien', 'dni', 'dni');

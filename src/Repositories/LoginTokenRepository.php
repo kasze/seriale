@@ -22,7 +22,7 @@ final class LoginTokenRepository extends BaseRepository
             'requested_ip' => $ip,
         ]);
 
-        return $this->findById((int) $this->pdo->lastInsertId()) ?? throw new \RuntimeException('Nie udalo sie zapisac tokenu logowania.');
+        return $this->findById((int) $this->pdo->lastInsertId()) ?? throw new \RuntimeException('Nie udało się zapisać tokenu logowania.');
     }
 
     public function consumeByTokenHash(string $tokenHash): ?array

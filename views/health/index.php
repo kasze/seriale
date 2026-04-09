@@ -5,7 +5,7 @@ declare(strict_types=1);
 <section class="section">
     <div class="section__head">
         <h1>Stan systemu</h1>
-        <p>Prosty ekran kontrolny do shared hostingu.</p>
+        <p>Krótki test aplikacji, bazy danych i włączonych integracji.</p>
     </div>
     <div class="mini-grid">
         <article class="mini-card">
@@ -26,11 +26,11 @@ declare(strict_types=1);
         </article>
     </div>
     <article class="panel">
-        <h2>Providery</h2>
+        <h2>Integracje</h2>
         <ul class="link-list">
-            <li>TVmaze: <?= $health['providers']['tvmaze'] ? 'wlaczony' : 'wylaczony' ?></li>
-            <li>TMDb: <?= $health['providers']['tmdb'] ? 'wlaczony' : 'wylaczony' ?></li>
-            <li>OMDb: <?= $health['providers']['omdb'] ? 'wlaczony' : 'wylaczony' ?></li>
+            <li>TVmaze: <?= $health['providers']['tvmaze'] ? 'włączony' : 'wyłączony' ?></li>
+            <li>TMDb: <?= $health['providers']['tmdb'] ? 'włączony' : 'wyłączony' ?></li>
+            <li>OMDb: <?= $health['providers']['omdb'] ? 'włączony' : 'wyłączony' ?></li>
         </ul>
     </article>
 </section>

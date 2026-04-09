@@ -169,7 +169,7 @@ final class ShowController extends Controller
         $show = $this->shows->findById((int) $id);
 
         if ($show === null) {
-            throw new HttpException(404, 'Serial nie zostal znaleziony.');
+            throw new HttpException(404, 'Serial nie został znaleziony.');
         }
 
         $show = $this->sync->refreshIfStale($show);
@@ -209,7 +209,7 @@ final class ShowController extends Controller
             }
 
             $episode['summary_text'] = Html::stripSummary($episode['summary'] ?? null);
-            $episode['status_label'] = !empty($episode['airstamp']) && strtotime((string) $episode['airstamp']) <= time() ? 'Wyemitowany' : 'Nadchodzacy';
+            $episode['status_label'] = !empty($episode['airstamp']) && strtotime((string) $episode['airstamp']) <= time() ? 'Wyemitowany' : 'Nadchodzący';
             $episode['is_latest'] = ($highlight['last'] ?? null) === sprintf('S%02dE%02d', (int) ($episode['season_number'] ?? 0), (int) ($episode['episode_number'] ?? 0));
             $episode['is_next'] = ($highlight['next'] ?? null) === sprintf('S%02dE%02d', (int) ($episode['season_number'] ?? 0), (int) ($episode['episode_number'] ?? 0));
             $seasons[$key]['episodes'][] = $episode;
@@ -230,7 +230,7 @@ final class ShowController extends Controller
     {
         $this->csrf->validate((string) $request->input('_csrf'));
         $this->sync->refreshLocalShow((int) $id, true);
-        app(\App\Core\Session::class)->flash('success', 'Dane serialu zostaly odswiezone.');
+        app(\App\Core\Session::class)->flash('success', 'Dane serialu zostały odświeżone.');
 
         return $this->redirect('/shows/' . $id);
     }
@@ -244,7 +244,7 @@ final class ShowController extends Controller
             $this->trackedService->untrack($userId, (int) $id);
         }
 
-        app(\App\Core\Session::class)->flash('success', 'Serial usuniety z obserwowanych.');
+        app(\App\Core\Session::class)->flash('success', 'Serial usunięty z obserwowanych.');
 
         return $this->redirect('/dashboard');
     }

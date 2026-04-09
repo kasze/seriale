@@ -38,7 +38,7 @@ final class UserRepository extends BaseRepository
             'display_name' => 'Single User',
         ]);
 
-        return $this->findById((int) $this->pdo->lastInsertId()) ?? throw new \RuntimeException('Nie udalo sie utworzyc uzytkownika.');
+        return $this->findById((int) $this->pdo->lastInsertId()) ?? throw new \RuntimeException('Nie udało się utworzyć użytkownika.');
     }
 
     public function markLogin(int $userId, string $timestamp): void

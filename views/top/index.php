@@ -6,7 +6,7 @@ declare(strict_types=1);
     <div class="section__head">
         <div>
             <h1>Topki seriali</h1>
-            <p>Rankingowe listy z TMDb. Dane odświeżają się najwyżej raz na tydzień.</p>
+            <p>Popularne, trendujące i wysoko oceniane seriale. Obserwowane tytuły są ukryte.</p>
         </div>
     </div>
 
@@ -16,7 +16,7 @@ declare(strict_types=1);
         </div>
     <?php elseif ($lists === []): ?>
         <div class="empty-state empty-state--soft">
-            TMDb nie zwróciło teraz żadnych list rankingowych.
+            Nie udało się teraz pobrać list rankingowych. Spróbuj ponownie później.
         </div>
     <?php else: ?>
         <div class="tab-strip" data-tabs>
@@ -100,7 +100,7 @@ declare(strict_types=1);
                             </article>
                         <?php endforeach; ?>
                         <?php if (($list['items'] ?? []) === []): ?>
-                            <div class="empty-state empty-state--soft">W tym rankingu nie ma teraz nowych seriali poza tymi, ktore juz obserwujesz.</div>
+                            <div class="empty-state empty-state--soft">W tym rankingu nie ma teraz nowych tytułów poza tymi, które już obserwujesz.</div>
                         <?php endif; ?>
                     </div>
                 </div>

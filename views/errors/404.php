@@ -7,6 +7,6 @@ declare(strict_types=1);
         <p class="eyebrow">404</p>
         <h1>Nie znaleziono strony</h1>
         <p><?= e((string) ($message ?? 'Podany adres nie istnieje.')) ?></p>
-        <a class="button button--primary" href="<?= e(path_url('/dashboard')) ?>">Wroc do dashboardu</a>
+        <a class="button button--primary" href="<?= e(path_url('/dashboard')) ?>">Wróć do pulpitu</a>
     </div>
 </section>

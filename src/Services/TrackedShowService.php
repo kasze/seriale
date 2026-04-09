@@ -55,7 +55,7 @@ final class TrackedShowService
         $match = $this->pickBestSearchMatch($results, $query, $year);
 
         if ($match === null || empty($match['source_id'])) {
-            throw new \RuntimeException('Nie udało się dobrać pasującego serialu w TVmaze.');
+            throw new \RuntimeException('Nie udało się znaleźć pasującego serialu w TVmaze.');
         }
 
         $show = $this->trackByExternalSource($userId, 'tvmaze', (string) $match['source_id']);

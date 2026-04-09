@@ -20,7 +20,7 @@ $groupedDefinitions = array_filter(
 <section class="section">
     <div class="section__head">
         <h1>Ustawienia</h1>
-        <p>Najpierw wyglad i dostep, nizej synchronizacja i integracje z zewnetrznymi API.</p>
+        <p>Najważniejsze opcje aplikacji, konta, synchronizacji i integracji.</p>
     </div>
     <div class="settings-layout">
         <form method="post" action="<?= e(path_url('/settings')) ?>" class="settings-form">
@@ -91,13 +91,13 @@ $groupedDefinitions = array_filter(
 
         <aside class="settings-side">
             <article class="panel panel--subtle settings-note">
-                <h2>Jak to jest poukladane</h2>
-                <p>`Wyglad i aplikacja` dotyczy calego interfejsu. `Dostep i reset hasla` dotyczy tylko logowania i maila resetu.</p>
-                <p>`Synchronizacja` kontroluje odswiezanie danych, a `Integracje z API` wlacza konkretne zrodla i klucze dostepowe.</p>
+                <h2>Jak to jest poukładane</h2>
+                <p>`Wygląd i aplikacja` dotyczy całego interfejsu. `Dostęp i reset hasła` dotyczy tylko logowania i resetu.</p>
+                <p>`Synchronizacja` kontroluje odświeżanie danych, a `Integracje z API` włącza źródła odcinków, rekomendacji i ocen.</p>
             </article>
             <article class="panel panel--subtle settings-note">
                 <h2>Szybkie akcje</h2>
-                <p>Reczny refresh pobiera najnowsze odcinki dla calej listy obserwowanych. Wylogowanie konczy tylko biezaca sesje w tej przegladarce.</p>
+                <p>Ręczny refresh pobiera najnowsze odcinki dla całej listy obserwowanych. Wylogowanie kończy tylko bieżącą sesję w tej przeglądarce.</p>
                 <form method="post" action="<?= e(path_url('/settings')) ?>" class="inline-form">
                     <?= csrf_field() ?>
                     <input type="hidden" name="action" value="refresh_tracked">
