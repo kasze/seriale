@@ -1,6 +1,6 @@
 # Seriale
 
-Lekka aplikacja do pilnowania nowych odcinków seriali. Jest przeznaczona dla jednej osoby i zwykłego hostingu z PHP oraz MariaDB/MySQL. Nie wymaga Dockera, Node.js po stronie serwera, Redis, kolejek ani procesów działających w tle.
+Lekka aplikacja do pilnowania nowych odcinków seriali. Jest przeznaczona dla jednej osoby i zwykłego hostingu z PHP oraz MariaDB/MySQL.
 
 ## Co Potrafi
 
@@ -157,8 +157,6 @@ OMDB_ENABLED=true
 OMDB_API_KEY=wklej-klucz
 ```
 
-Aplikacja nie pobiera ocen z Filmwebu, bo Filmweb nie udostępnia stabilnego publicznego API dla tej funkcji.
-
 ## Wdrożenie Na Hosting
 
 Najczystszy wariant: ustaw katalog publiczny strony na `public/`.
@@ -171,7 +169,7 @@ Po wgraniu plików wykonaj migracje:
 php bin/migrate.php
 ```
 
-Na publicznym hostingu ustaw:
+Na hostingu ustaw:
 
 ```dotenv
 APP_ENV=production
@@ -279,7 +277,7 @@ Migracje są bezpieczne dla istniejących danych użytkownika. Skrypt wdrożenio
 - Logi aplikacji trafiają do `storage/logs/app.log`.
 - Nie commituj zrzutów bazy, plików `.env`, prywatnych kluczy ani haseł FTP.
 
-## Publikacja Na GitHubie
+## Git
 
 Sprawdź stan:
 
@@ -288,7 +286,7 @@ git status --short
 git log --oneline -n 5
 ```
 
-Dodaj zdalne repo przez SSH:
+Dodaj zdalne repo:
 
 ```bash
 git remote add origin git@github.com:TWOJ_LOGIN/TWOJE_REPO.git
@@ -296,20 +294,12 @@ git branch -M main
 git push -u origin main
 ```
 
-Jeżeli zdalne repo już istnieje:
+Wyślij zmiany:
 
 ```bash
 git remote -v
 git push
 ```
-
-Test połączenia z GitHubem:
-
-```bash
-ssh -T git@github.com
-```
-
-Hasło pytane przez `Enter passphrase for key ...` to hasło do lokalnego klucza SSH, a nie hasło do konta GitHub.
 
 ## Zasady Rozwoju
 
