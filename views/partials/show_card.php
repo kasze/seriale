@@ -34,7 +34,7 @@ if ($seasonStatusLabel !== null) {
 <article class="show-card show-card--<?= e($bucket) ?> <?= $isEnded ? 'show-card--ended' : '' ?>">
     <div class="show-card__poster">
         <?php if (!empty($item['poster_url'])): ?>
-            <img src="<?= e((string) $item['poster_url']) ?>" alt="<?= e((string) $item['title']) ?>">
+            <img src="<?= e((string) $item['poster_url']) ?>" alt="<?= e((string) $item['title']) ?>" loading="lazy" decoding="async">
         <?php else: ?>
             <div class="show-card__placeholder"><?= e(mb_substr((string) $item['title'], 0, 1)) ?></div>
         <?php endif; ?>

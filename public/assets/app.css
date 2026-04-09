@@ -705,7 +705,8 @@ body.theme--dark .show-card--ended {
 }
 
 .show-card__poster {
-    min-height: 220px;
+    aspect-ratio: 2 / 3;
+    align-self: start;
     background: #d9ddd8;
 }
 
@@ -922,7 +923,8 @@ body.theme--dark .tab-strip__button.is-active {
 }
 
 .related-card__poster {
-    min-height: 155px;
+    aspect-ratio: 2 / 3;
+    align-self: start;
     border-radius: 14px;
     overflow: hidden;
     background: rgba(97, 113, 107, 0.1);
@@ -1042,7 +1044,8 @@ body.theme--dark .tab-strip__button.is-active {
 }
 
 .top-row__poster {
-    min-height: 136px;
+    aspect-ratio: 2 / 3;
+    align-self: start;
     border-radius: 14px;
     overflow: hidden;
     background: rgba(97, 113, 107, 0.1);
@@ -1457,7 +1460,8 @@ body.theme--dark .episode-row--next {
 
 .search-result-card__poster {
     background: #d8ddd9;
-    min-height: 210px;
+    aspect-ratio: 2 / 3;
+    align-self: start;
 }
 
 .search-result-card__body {
@@ -1701,6 +1705,14 @@ body.theme--dark .footer {
     .show-card__body,
     .search-result-card__body {
         padding: 18px;
+    }
+
+    .show-card__poster,
+    .search-result-card__poster {
+        width: min(240px, calc(100% - 36px));
+        margin: 18px auto 0;
+        border-radius: 22px;
+        overflow: hidden;
     }
 
     .hero__stats {

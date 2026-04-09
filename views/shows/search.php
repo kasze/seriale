@@ -29,7 +29,7 @@ $compact = false;
                 <article class="search-result-card">
                     <div class="search-result-card__poster">
                         <?php if (!empty($result['poster_url'])): ?>
-                            <img src="<?= e((string) $result['poster_url']) ?>" alt="<?= e((string) $result['title']) ?>">
+                            <img src="<?= e((string) $result['poster_url']) ?>" alt="<?= e((string) $result['title']) ?>" loading="lazy" decoding="async">
                         <?php else: ?>
                             <div class="show-card__placeholder"><?= e(mb_substr((string) $result['title'], 0, 1)) ?></div>
                         <?php endif; ?>

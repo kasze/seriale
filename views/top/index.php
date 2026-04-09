@@ -52,7 +52,7 @@ declare(strict_types=1);
                                 <div class="top-card__rank"><?= e((string) $item['rank']) ?></div>
                                 <div class="top-row__poster">
                                     <?php if (!empty($item['poster_url'])): ?>
-                                        <img src="<?= e((string) $item['poster_url']) ?>" alt="<?= e((string) $item['title']) ?>">
+                                        <img src="<?= e((string) $item['poster_url']) ?>" alt="<?= e((string) $item['title']) ?>" loading="lazy" decoding="async">
                                     <?php else: ?>
                                         <div class="show-card__placeholder"><?= e(mb_substr((string) $item['title'], 0, 1)) ?></div>
                                     <?php endif; ?>

@@ -26,7 +26,7 @@ $externalRatings = array_values(array_filter([
 <section class="show-hero">
     <div class="show-hero__poster">
         <?php if (!empty($show['poster_url'])): ?>
-            <img src="<?= e((string) $show['poster_url']) ?>" alt="<?= e((string) $show['title']) ?>">
+            <img src="<?= e((string) $show['poster_url']) ?>" alt="<?= e((string) $show['title']) ?>" decoding="async">
         <?php else: ?>
             <div class="show-card__placeholder"><?= e(mb_substr((string) $show['title'], 0, 1)) ?></div>
         <?php endif; ?>
@@ -141,7 +141,7 @@ $externalRatings = array_values(array_filter([
                                 <article class="related-card">
                                     <div class="related-card__poster">
                                         <?php if (!empty($item['poster_url'])): ?>
-                                            <img src="<?= e((string) $item['poster_url']) ?>" alt="<?= e((string) $item['title']) ?>">
+                                            <img src="<?= e((string) $item['poster_url']) ?>" alt="<?= e((string) $item['title']) ?>" loading="lazy" decoding="async">
                                         <?php else: ?>
                                             <div class="show-card__placeholder"><?= e(mb_substr((string) $item['title'], 0, 1)) ?></div>
                                         <?php endif; ?>
@@ -199,7 +199,7 @@ $externalRatings = array_values(array_filter([
                                 <article class="related-card">
                                     <div class="related-card__poster">
                                         <?php if (!empty($item['poster_url'])): ?>
-                                            <img src="<?= e((string) $item['poster_url']) ?>" alt="<?= e((string) $item['title']) ?>">
+                                            <img src="<?= e((string) $item['poster_url']) ?>" alt="<?= e((string) $item['title']) ?>" loading="lazy" decoding="async">
                                         <?php else: ?>
                                             <div class="show-card__placeholder"><?= e(mb_substr((string) $item['title'], 0, 1)) ?></div>
                                         <?php endif; ?>
