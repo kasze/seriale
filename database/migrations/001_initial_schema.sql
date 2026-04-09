@@ -1,0 +1,223 @@
+CREATE TABLE IF NOT EXISTS `{{prefix}}users` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `identity` VARCHAR(190) NOT NULL,
+    `email` VARCHAR(190) DEFAULT NULL,
+    `display_name` VARCHAR(190) DEFAULT NULL,
+    `password_hash` VARCHAR(255) DEFAULT NULL,
+    `last_login_at` DATETIME DEFAULT NULL,
+    `last_seen_at` DATETIME DEFAULT NULL,
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_{{prefix}}users_identity` (`identity`),
+    UNIQUE KEY `uq_{{prefix}}users_email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `{{prefix}}login_tokens` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `user_id` BIGINT UNSIGNED DEFAULT NULL,
+    `identity` VARCHAR(190) NOT NULL,
+    `purpose` VARCHAR(40) NOT NULL DEFAULT 'login',
+    `token_hash` CHAR(64) NOT NULL,
+    `code_hash` CHAR(64) NOT NULL,
+    `expires_at` DATETIME NOT NULL,
+    `consumed_at` DATETIME DEFAULT NULL,
+    `requested_ip` VARCHAR(64) DEFAULT NULL,
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_{{prefix}}login_tokens_hash` (`token_hash`),
+    KEY `idx_{{prefix}}login_tokens_identity` (`identity`),
+    KEY `idx_{{prefix}}login_tokens_purpose` (`purpose`, `expires_at`),
+    KEY `idx_{{prefix}}login_tokens_expires_at` (`expires_at`),
+    CONSTRAINT `fk_{{prefix}}login_tokens_user` FOREIGN KEY (`user_id`) REFERENCES `{{prefix}}users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `{{prefix}}shows` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `source_provider` VARCHAR(50) NOT NULL DEFAULT 'tvmaze',
+    `source_id` VARCHAR(100) NOT NULL,
+    `slug` VARCHAR(220) NOT NULL,
+    `title` VARCHAR(255) NOT NULL,
+    `title_sort` VARCHAR(255) NOT NULL DEFAULT '',
+    `premiered_on` DATE DEFAULT NULL,
+    `ended_on` DATE DEFAULT NULL,
+    `status` VARCHAR(80) DEFAULT NULL,
+    `show_type` VARCHAR(80) DEFAULT NULL,
+    `language` VARCHAR(120) DEFAULT NULL,
+    `summary` TEXT DEFAULT NULL,
+    `country_name` VARCHAR(120) DEFAULT NULL,
+    `country_code` VARCHAR(10) DEFAULT NULL,
+    `network_name` VARCHAR(190) DEFAULT NULL,
+    `web_channel_name` VARCHAR(190) DEFAULT NULL,
+    `official_site` TEXT DEFAULT NULL,
+    `imdb_url` TEXT DEFAULT NULL,
+    `tvmaze_url` TEXT DEFAULT NULL,
+    `tmdb_url` TEXT DEFAULT NULL,
+    `manual_filmweb_url` TEXT DEFAULT NULL,
+    `poster_url` TEXT DEFAULT NULL,
+    `banner_url` TEXT DEFAULT NULL,
+    `runtime_minutes` INT DEFAULT NULL,
+    `average_runtime_minutes` INT DEFAULT NULL,
+    `genres` LONGTEXT NOT NULL,
+    `schedule_time` VARCHAR(16) DEFAULT NULL,
+    `schedule_days` LONGTEXT NOT NULL,
+    `tvmaze_rating` DECIMAL(3,1) DEFAULT NULL,
+    `imdb_rating` DECIMAL(3,1) DEFAULT NULL,
+    `imdb_rating_source` VARCHAR(80) DEFAULT NULL,
+    `rotten_tomatoes_rating` VARCHAR(16) DEFAULT NULL,
+    `rotten_tomatoes_source` VARCHAR(80) DEFAULT NULL,
+    `metacritic_rating` SMALLINT DEFAULT NULL,
+    `metacritic_rating_source` VARCHAR(80) DEFAULT NULL,
+    `tmdb_rating` DECIMAL(3,1) DEFAULT NULL,
+    `tmdb_rating_source` VARCHAR(80) DEFAULT NULL,
+    `seasons_count` INT NOT NULL DEFAULT 0,
+    `episodes_count` INT NOT NULL DEFAULT 0,
+    `last_episode_air_at` DATETIME DEFAULT NULL,
+    `last_episode_label` VARCHAR(120) DEFAULT NULL,
+    `next_episode_air_at` DATETIME DEFAULT NULL,
+    `next_episode_label` VARCHAR(120) DEFAULT NULL,
+    `last_synced_at` DATETIME DEFAULT NULL,
+    `sync_due_at` DATETIME DEFAULT NULL,
+    `last_sync_status` VARCHAR(40) DEFAULT NULL,
+    `provider_payload` LONGTEXT NOT NULL,
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_{{prefix}}shows_source` (`source_provider`, `source_id`),
+    KEY `idx_{{prefix}}shows_title_sort` (`title_sort`),
+    KEY `idx_{{prefix}}shows_next_episode` (`next_episode_air_at`),
+    KEY `idx_{{prefix}}shows_sync_due` (`sync_due_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `{{prefix}}external_ids` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `show_id` BIGINT UNSIGNED NOT NULL,
+    `provider` VARCHAR(50) NOT NULL,
+    `external_type` VARCHAR(50) NOT NULL DEFAULT 'show',
+    `external_id` VARCHAR(120) NOT NULL,
+    `meta` LONGTEXT NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_{{prefix}}external_ids_ext` (`provider`, `external_type`, `external_id`),
+    UNIQUE KEY `uq_{{prefix}}external_ids_show` (`show_id`, `provider`, `external_type`),
+    KEY `idx_{{prefix}}external_ids_show_id` (`show_id`),
+    CONSTRAINT `fk_{{prefix}}external_ids_show` FOREIGN KEY (`show_id`) REFERENCES `{{prefix}}shows` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `{{prefix}}seasons` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `show_id` BIGINT UNSIGNED NOT NULL,
+    `source_provider` VARCHAR(50) NOT NULL,
+    `source_id` VARCHAR(100) NOT NULL,
+    `season_number` INT DEFAULT NULL,
+    `name` VARCHAR(255) DEFAULT NULL,
+    `episode_order` INT DEFAULT NULL,
+    `premiere_date` DATE DEFAULT NULL,
+    `end_date` DATE DEFAULT NULL,
+    `image_url` TEXT DEFAULT NULL,
+    `summary` TEXT DEFAULT NULL,
+    `provider_payload` LONGTEXT NOT NULL,
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_{{prefix}}seasons_source` (`show_id`, `source_provider`, `source_id`),
+    KEY `idx_{{prefix}}seasons_show_number` (`show_id`, `season_number`),
+    CONSTRAINT `fk_{{prefix}}seasons_show` FOREIGN KEY (`show_id`) REFERENCES `{{prefix}}shows` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `{{prefix}}episodes` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `show_id` BIGINT UNSIGNED NOT NULL,
+    `season_id` BIGINT UNSIGNED DEFAULT NULL,
+    `source_provider` VARCHAR(50) NOT NULL,
+    `source_id` VARCHAR(100) NOT NULL,
+    `season_number` INT DEFAULT NULL,
+    `episode_number` INT DEFAULT NULL,
+    `episode_type` VARCHAR(40) DEFAULT NULL,
+    `name` VARCHAR(255) DEFAULT NULL,
+    `summary` TEXT DEFAULT NULL,
+    `airdate` DATE DEFAULT NULL,
+    `airtime` VARCHAR(16) DEFAULT NULL,
+    `airstamp` DATETIME DEFAULT NULL,
+    `runtime_minutes` INT DEFAULT NULL,
+    `image_url` TEXT DEFAULT NULL,
+    `is_special` TINYINT(1) NOT NULL DEFAULT 0,
+    `provider_payload` LONGTEXT NOT NULL,
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_{{prefix}}episodes_source` (`show_id`, `source_provider`, `source_id`),
+    KEY `idx_{{prefix}}episodes_show_air` (`show_id`, `airstamp`),
+    KEY `idx_{{prefix}}episodes_show_order` (`show_id`, `season_number`, `episode_number`),
+    CONSTRAINT `fk_{{prefix}}episodes_show` FOREIGN KEY (`show_id`) REFERENCES `{{prefix}}shows` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_{{prefix}}episodes_season` FOREIGN KEY (`season_id`) REFERENCES `{{prefix}}seasons` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `{{prefix}}tracked_shows` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `user_id` BIGINT UNSIGNED NOT NULL,
+    `show_id` BIGINT UNSIGNED NOT NULL,
+    `added_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `sort_order` INT DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_{{prefix}}tracked_shows_user_show` (`user_id`, `show_id`),
+    KEY `idx_{{prefix}}tracked_shows_user_added` (`user_id`, `added_at`),
+    CONSTRAINT `fk_{{prefix}}tracked_user` FOREIGN KEY (`user_id`) REFERENCES `{{prefix}}users` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_{{prefix}}tracked_show` FOREIGN KEY (`show_id`) REFERENCES `{{prefix}}shows` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `{{prefix}}show_user_state` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `user_id` BIGINT UNSIGNED NOT NULL,
+    `show_id` BIGINT UNSIGNED NOT NULL,
+    `last_checked_at` DATETIME DEFAULT NULL,
+    `last_opened_at` DATETIME DEFAULT NULL,
+    `notes` TEXT DEFAULT NULL,
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_{{prefix}}show_user_state_user_show` (`user_id`, `show_id`),
+    KEY `idx_{{prefix}}show_user_state_user_checked` (`user_id`, `last_checked_at`),
+    CONSTRAINT `fk_{{prefix}}state_user` FOREIGN KEY (`user_id`) REFERENCES `{{prefix}}users` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_{{prefix}}state_show` FOREIGN KEY (`show_id`) REFERENCES `{{prefix}}shows` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `{{prefix}}sync_logs` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `show_id` BIGINT UNSIGNED DEFAULT NULL,
+    `provider` VARCHAR(50) NOT NULL,
+    `scope` VARCHAR(50) NOT NULL,
+    `status` VARCHAR(30) NOT NULL,
+    `message` TEXT DEFAULT NULL,
+    `context` LONGTEXT NOT NULL,
+    `duration_ms` INT DEFAULT NULL,
+    `ran_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    KEY `idx_{{prefix}}sync_logs_show_ran` (`show_id`, `ran_at`),
+    CONSTRAINT `fk_{{prefix}}sync_logs_show` FOREIGN KEY (`show_id`) REFERENCES `{{prefix}}shows` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `{{prefix}}app_settings` (
+    `key` VARCHAR(100) NOT NULL,
+    `value` TEXT DEFAULT NULL,
+    `type` VARCHAR(20) NOT NULL DEFAULT 'string',
+    `group_name` VARCHAR(50) NOT NULL DEFAULT 'general',
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `{{prefix}}app_settings` (`key`, `value`, `type`, `group_name`) VALUES
+    ('app_name', 'Seriale', 'string', 'general'),
+    ('app_env', 'development', 'string', 'general'),
+    ('app_timezone', 'Europe/Warsaw', 'string', 'general'),
+    ('single_user_identity', 'you@example.com', 'string', 'general'),
+    ('cache_ttl_hours', '12', 'int', 'sync'),
+    ('provider_tvmaze_enabled', '1', 'bool', 'providers'),
+    ('provider_tmdb_enabled', '0', 'bool', 'providers'),
+    ('provider_omdb_enabled', '0', 'bool', 'providers'),
+    ('tmdb_api_key', '', 'string', 'providers'),
+    ('omdb_api_key', '', 'string', 'providers'),
+    ('mail_transport', 'log', 'string', 'mail'),
+    ('mail_from_address', 'no-reply@example.com', 'string', 'mail'),
+    ('mail_from_name', 'Seriale', 'string', 'mail'),
+    ('cron_secret', 'change-me-too', 'string', 'sync')
+ON DUPLICATE KEY UPDATE `value` = VALUES(`value`), `type` = VALUES(`type`), `group_name` = VALUES(`group_name`);

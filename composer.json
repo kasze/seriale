@@ -1,0 +1,14 @@
+{
+    "name": "kasze/seriale",
+    "description": "Lekka aplikacja do sledzenia nowych odcinkow seriali pod shared hosting.",
+    "type": "project",
+    "require": {
+        "php": "^8.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    }
+}
+
