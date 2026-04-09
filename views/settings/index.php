@@ -91,11 +91,6 @@ $groupedDefinitions = array_filter(
 
         <aside class="settings-side">
             <article class="panel panel--subtle settings-note">
-                <h2>Jak to jest poukładane</h2>
-                <p>`Wygląd i aplikacja` dotyczy całego interfejsu. `Dostęp i reset hasła` dotyczy tylko logowania i resetu.</p>
-                <p>`Synchronizacja` kontroluje odświeżanie danych, a `Integracje z API` włącza źródła odcinków, rekomendacji i ocen.</p>
-            </article>
-            <article class="panel panel--subtle settings-note">
                 <h2>Szybkie akcje</h2>
                 <p>Ręczny refresh pobiera najnowsze odcinki dla całej listy obserwowanych. Wylogowanie kończy tylko bieżącą sesję w tej przeglądarce.</p>
                 <form method="post" action="<?= e(path_url('/settings')) ?>" class="inline-form">
