@@ -92,7 +92,7 @@ $groupedDefinitions = array_filter(
         <aside class="settings-side">
             <article class="panel panel--subtle settings-note">
                 <h2>Szybkie akcje</h2>
-                <p>Ręczny refresh pobiera najnowsze odcinki dla całej listy obserwowanych. Wylogowanie kończy tylko bieżącą sesję w tej przeglądarce.</p>
+                <p>Ręczne odświeżenie pobiera najnowsze odcinki dla całej listy obserwowanych. Wylogowanie kończy tylko bieżącą sesję w tej przeglądarce.</p>
                 <form method="post" action="<?= e(path_url('/settings')) ?>" class="inline-form">
                     <?= csrf_field() ?>
                     <input type="hidden" name="action" value="refresh_tracked">

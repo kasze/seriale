@@ -67,7 +67,7 @@ final class AppSettingsService
             ],
             [
                 'key' => 'cache_ttl_hours',
-                'label' => 'TTL cache',
+                'label' => 'Ważność zapisanych danych',
                 'type' => 'int',
                 'group' => 'sync',
                 'input' => 'number',
@@ -81,18 +81,18 @@ final class AppSettingsService
                 'type' => 'int',
                 'group' => 'sync',
                 'input' => 'number',
-                'help' => 'Ile dni dodać do dat z TVmaze przed zapisaniem odcinka. Dla seriali z USA na streamingach w Polsce zwykle zostaw 1. Dla dokładnych dat z API ustaw 0.',
+                'help' => 'Ile dni dodać do dat z TVmaze przed zapisaniem odcinka. Dla seriali z USA na polskich platformach zwykle zostaw 1. Dla dokładnych dat z API ustaw 0.',
                 'suffix' => 'dni',
                 'min' => -7,
                 'max' => 14,
             ],
             [
                 'key' => 'cron_secret',
-                'label' => 'Sekret endpointu cron',
+                'label' => 'Tajny klucz automatycznego odświeżania',
                 'type' => 'string',
                 'group' => 'sync',
                 'input' => 'text',
-                'help' => 'Tajny klucz do ręcznego lub cyklicznego odpalania /cron/sync. Powinien być długi i losowy.',
+                'help' => 'Tajny klucz potrzebny do uruchomienia technicznego adresu odświeżania przez hosting albo zewnętrzny automat. Powinien być długi i losowy.',
                 'placeholder' => 'np. dlugi-losowy-sekret',
             ],
             [
@@ -107,7 +107,7 @@ final class AppSettingsService
                 'label' => 'TMDb',
                 'type' => 'bool',
                 'group' => 'providers',
-                'help' => 'Dostarcza topki, podobne seriale i rekomendacje w szczegółach serialu. Wymaga klucza API TMDb.',
+                'help' => 'Dostarcza topki, podobne seriale i polecane tytuły w szczegółach serialu. Wymaga klucza API TMDb.',
             ],
             [
                 'key' => 'tmdb_api_key',
@@ -115,7 +115,7 @@ final class AppSettingsService
                 'type' => 'string',
                 'group' => 'providers',
                 'input' => 'text',
-                'help' => 'Wklej klucz API z themoviedb.org. Używany do topek, podobnych seriali i rekomendacji.',
+                'help' => 'Wklej klucz API z themoviedb.org. Używany do topek, podobnych seriali i polecanych tytułów.',
                 'placeholder' => 'wklej klucz TMDb',
                 'nullable' => true,
             ],
@@ -138,14 +138,14 @@ final class AppSettingsService
             ],
             [
                 'key' => 'mail_transport',
-                'label' => 'Transport maila',
+                'label' => 'Wysyłka wiadomości',
                 'type' => 'string',
                 'group' => 'account',
                 'input' => 'select',
-                'help' => 'Mail wysyła wiadomość przez wbudowane mail(). Log nie wysyła nic i zapisuje link resetu tylko w logach / fallbackach.',
+                'help' => 'Wbudowana wysyłka PHP próbuje wysłać wiadomość. Dziennik aplikacji nie wysyła wiadomości i zapisuje link resetu tylko w lokalnym dzienniku zdarzeń.',
                 'options' => [
-                    ['value' => 'mail', 'label' => 'mail'],
-                    ['value' => 'log', 'label' => 'log'],
+                    ['value' => 'mail', 'label' => 'Wbudowana wysyłka PHP'],
+                    ['value' => 'log', 'label' => 'Dziennik aplikacji'],
                 ],
             ],
             [
@@ -154,7 +154,7 @@ final class AppSettingsService
                 'type' => 'string',
                 'group' => 'account',
                 'input' => 'email',
-                'help' => 'Adres From używany przy mailach resetu hasła. Typowo no-reply@twojadomena.pl.',
+                'help' => 'Adres nadawcy używany przy mailach resetu hasła. Typowo no-reply@twojadomena.pl.',
                 'placeholder' => 'no-reply@example.com',
             ],
             [
@@ -174,15 +174,15 @@ final class AppSettingsService
         return [
             'appearance' => [
                 'label' => 'Wygląd i aplikacja',
-                'description' => 'Nazwa aplikacji i motyw interfejsu. Tryb production/development ustawiasz w pliku .env.',
+                'description' => 'Nazwa aplikacji i motyw interfejsu. Tryb publiczny albo deweloperski ustawiasz w pliku .env.',
             ],
             'account' => [
                 'label' => 'Dostęp i reset hasła',
-                'description' => 'Login single-user oraz ustawienia techniczne maila do resetu hasła.',
+                'description' => 'Login jedynego użytkownika oraz ustawienia wiadomości do resetu hasła.',
             ],
             'sync' => [
                 'label' => 'Synchronizacja',
-                'description' => 'Cache, korekta dat emisji i zabezpieczenie ręcznego odpalania crona.',
+                'description' => 'Zapisane dane, korekta dat emisji i zabezpieczenie automatycznego odświeżania.',
             ],
             'providers' => [
                 'label' => 'Integracje z API',
