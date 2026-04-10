@@ -1155,9 +1155,9 @@ body.theme--dark .tab-strip__button.is-active {
 }
 
 .episode-feed__time-note--today {
-    background: linear-gradient(180deg, rgba(216, 111, 42, 0.26), rgba(216, 111, 42, 0.12));
-    color: #8a3f11;
-    border-color: rgba(216, 111, 42, 0.26);
+    background: linear-gradient(180deg, rgba(201, 104, 45, 0.28), rgba(201, 104, 45, 0.1));
+    color: #873e16;
+    border-color: rgba(201, 104, 45, 0.22);
 }
 
 .episode-feed__time-note--yesterday {
@@ -1171,9 +1171,9 @@ body.theme--dark .episode-feed__time-note--fresh {
 }
 
 body.theme--dark .episode-feed__time-note--today {
-    background: linear-gradient(180deg, rgba(255, 149, 79, 0.28), rgba(255, 149, 79, 0.12));
-    color: #fff0dd;
-    border-color: rgba(255, 149, 79, 0.24);
+    background: linear-gradient(180deg, rgba(255, 166, 102, 0.28), rgba(255, 166, 102, 0.12));
+    color: #fff1e3;
+    border-color: rgba(255, 166, 102, 0.22);
 }
 
 body.theme--dark .episode-feed__time-note--yesterday {
