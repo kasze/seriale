@@ -3,15 +3,18 @@
 declare(strict_types=1);
 
 $renderEpisodeFeed = static function (array $episodes, string $mode): void {
-    foreach ($episodes as $episode): ?>
+    foreach ($episodes as $episode):
+        $relative = relative_date((string) $episode['airstamp']);
+        $isFreshPast = $mode === 'past' && in_array($relative, ['dzisiaj', 'wczoraj'], true);
+        ?>
         <article class="episode-feed__item">
             <div class="episode-feed__time">
                 <?php if ($mode === 'past'): ?>
                     <span class="pill pill--aired">Wyemitowany</span>
-                    <strong><?= e(relative_date((string) $episode['airstamp'])) ?></strong>
+                    <strong class="<?= $isFreshPast ? 'episode-feed__time-note episode-feed__time-note--fresh' : '' ?>"><?= e($relative) ?></strong>
                 <?php else: ?>
                     <span class="pill pill--upcoming">Nadchodzący</span>
-                    <strong><?= e(relative_date((string) $episode['airstamp'])) ?></strong>
+                    <strong><?= e($relative) ?></strong>
                 <?php endif; ?>
             </div>
             <div class="episode-feed__body">
