@@ -6,12 +6,17 @@ $renderEpisodeFeed = static function (array $episodes, string $mode): void {
     foreach ($episodes as $episode):
         $relative = relative_date((string) $episode['airstamp']);
         $isFreshPast = $mode === 'past' && in_array($relative, ['dzisiaj', 'wczoraj'], true);
+        $freshClass = match ($relative) {
+            'dzisiaj' => 'episode-feed__time-note--today',
+            'wczoraj' => 'episode-feed__time-note--yesterday',
+            default => '',
+        };
         ?>
         <article class="episode-feed__item">
             <div class="episode-feed__time">
                 <?php if ($mode === 'past'): ?>
                     <span class="pill pill--aired">Wyemitowany</span>
-                    <strong class="<?= $isFreshPast ? 'episode-feed__time-note episode-feed__time-note--fresh' : '' ?>"><?= e($relative) ?></strong>
+                    <strong class="<?= $isFreshPast ? 'episode-feed__time-note episode-feed__time-note--fresh ' . $freshClass : '' ?>"><?= e($relative) ?></strong>
                 <?php else: ?>
                     <span class="pill pill--upcoming">Nadchodzący</span>
                     <strong><?= e($relative) ?></strong>
