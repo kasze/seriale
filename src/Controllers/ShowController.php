@@ -215,6 +215,8 @@ final class ShowController extends Controller
             $seasons[$key]['episodes'][] = $episode;
         }
 
+        $seasonProgress = $this->buildSeasonProgress($seasons);
+
         return $this->render('shows/detail', [
             'pageTitle' => $show['title'],
             'show' => $show,
@@ -222,6 +224,7 @@ final class ShowController extends Controller
             'similarShows' => $similarShows,
             'similarShowsEnabled' => $this->similarShows->enabled(),
             'seasonGroups' => $seasons,
+            'seasonProgress' => $seasonProgress,
             'settings' => $this->settings->all(),
         ]);
     }
@@ -257,5 +260,113 @@ final class ShowController extends Controller
         $item['local_url'] = $item['tracked_show_id'] ? path_url('/shows/' . (string) $item['tracked_show_id']) : null;
 
         return $item;
+    }
+
+    private function buildSeasonProgress(array $seasonGroups): ?array
+    {
+        if ($seasonGroups === []) {
+            return null;
+        }
+
+        $selected = null;
+
+        foreach ($seasonGroups as $group) {
+            foreach ($group['episodes'] as $episode) {
+                if (!empty($episode['is_next'])) {
+                    $selected = $group;
+                    break 2;
+                }
+            }
+        }
+
+        if ($selected === null) {
+            foreach ($seasonGroups as $group) {
+                foreach ($group['episodes'] as $episode) {
+                    if (!empty($episode['is_latest'])) {
+                        $selected = $group;
+                        break 2;
+                    }
+                }
+            }
+        }
+
+        $selected ??= reset($seasonGroups) ?: null;
+
+        if ($selected === null || empty($selected['episodes'])) {
+            return null;
+        }
+
+        $episodes = $selected['episodes'];
+        usort($episodes, static function (array $left, array $right): int {
+            $leftSeason = (int) ($left['season_number'] ?? 0);
+            $rightSeason = (int) ($right['season_number'] ?? 0);
+
+            if ($leftSeason !== $rightSeason) {
+                return $leftSeason <=> $rightSeason;
+            }
+
+            $leftNumber = (int) ($left['episode_number'] ?? 0);
+            $rightNumber = (int) ($right['episode_number'] ?? 0);
+
+            if ($leftNumber !== $rightNumber) {
+                return $leftNumber <=> $rightNumber;
+            }
+
+            return strcmp((string) ($left['airstamp'] ?? ''), (string) ($right['airstamp'] ?? ''));
+        });
+
+        $airedCount = 0;
+        $selectedMarkerId = null;
+        $markers = [];
+
+        foreach ($episodes as $index => $episode) {
+            $isAired = (($episode['status_label'] ?? '') === 'Wyemitowany');
+
+            if ($isAired) {
+                $airedCount++;
+            }
+
+            $markerId = 'season-progress-' . (string) ($episode['id'] ?? ($index + 1));
+
+            if ($selectedMarkerId === null && !empty($episode['is_next'])) {
+                $selectedMarkerId = $markerId;
+            }
+
+            if ($selectedMarkerId === null && !empty($episode['is_latest'])) {
+                $selectedMarkerId = $markerId;
+            }
+
+            $markers[] = [
+                'id' => $markerId,
+                'code' => sprintf('E%02d', (int) ($episode['episode_number'] ?? ($index + 1))),
+                'full_code' => sprintf('S%02dE%02d', (int) ($episode['season_number'] ?? 0), (int) ($episode['episode_number'] ?? 0)),
+                'title' => (string) ($episode['name'] ?? 'Bez tytułu'),
+                'date' => format_airing_date($episode['airstamp'] ?? $episode['airdate'] ?? null, $episode['airtime'] ?? null),
+                'relative' => relative_date($episode['airstamp'] ?? $episode['airdate'] ?? null),
+                'status' => (string) ($episode['status_label'] ?? ($isAired ? 'Wyemitowany' : 'Nadchodzący')),
+                'status_key' => $isAired ? 'aired' : 'upcoming',
+                'is_latest' => !empty($episode['is_latest']),
+                'is_next' => !empty($episode['is_next']),
+            ];
+        }
+
+        $selectedMarkerId ??= $markers[0]['id'] ?? null;
+        $selectedMarker = null;
+
+        foreach ($markers as $marker) {
+            if ($marker['id'] === $selectedMarkerId) {
+                $selectedMarker = $marker;
+                break;
+            }
+        }
+
+        return [
+            'season_name' => (string) ($selected['season']['name'] ?? ('Sezon ' . ($selected['season']['season_number'] ?? '?'))),
+            'season_number' => (int) ($selected['season']['season_number'] ?? 0),
+            'total_count' => count($markers),
+            'aired_count' => $airedCount,
+            'selected' => $selectedMarker,
+            'markers' => $markers,
+        ];
     }
 }

@@ -1720,6 +1720,108 @@ body.theme--dark .auth-card {
     gap: 10px;
 }
 
+.season-progress {
+    display: grid;
+    gap: 14px;
+    margin-top: 22px;
+    padding: 18px;
+    border-radius: 22px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(243, 248, 255, 0.72));
+    border: 1px solid var(--line);
+}
+
+.season-progress__head {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: start;
+}
+
+.season-progress__head h3,
+.season-progress__head p {
+    margin: 0;
+}
+
+.season-progress__head p {
+    margin-top: 4px;
+    color: var(--muted);
+}
+
+.season-progress__track {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
+    gap: 10px;
+}
+
+.season-progress__marker {
+    display: grid;
+    place-items: center;
+    min-height: 46px;
+    padding: 10px 8px;
+    border-radius: 16px;
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.8);
+    color: var(--text);
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.season-progress__marker:hover,
+.season-progress__marker:focus-visible,
+.season-progress__marker.is-active {
+    transform: translateY(-1px);
+    border-color: rgba(62, 108, 255, 0.24);
+    box-shadow: 0 12px 24px rgba(25, 41, 79, 0.12);
+    outline: none;
+}
+
+.season-progress__marker--aired {
+    background: rgba(255, 244, 236, 0.92);
+}
+
+.season-progress__marker--upcoming {
+    background: rgba(238, 250, 246, 0.92);
+}
+
+.season-progress__marker.is-latest {
+    box-shadow: inset 0 0 0 1px rgba(208, 109, 58, 0.28);
+}
+
+.season-progress__marker.is-next {
+    box-shadow: inset 0 0 0 1px rgba(29, 157, 121, 0.28);
+}
+
+.season-progress__detail {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    padding-top: 2px;
+    color: var(--muted);
+}
+
+.season-progress__detail strong {
+    color: var(--accent-ink);
+}
+
+body.theme--dark .season-progress {
+    background: linear-gradient(180deg, rgba(18, 26, 38, 0.92), rgba(20, 29, 41, 0.82));
+}
+
+body.theme--dark .season-progress__marker {
+    background: rgba(16, 24, 35, 0.92);
+}
+
+body.theme--dark .season-progress__marker--aired {
+    background: rgba(66, 39, 22, 0.92);
+}
+
+body.theme--dark .season-progress__marker--upcoming {
+    background: rgba(17, 58, 49, 0.92);
+}
+
 .season-card__head {
     display: flex;
     align-items: center;
@@ -2065,6 +2167,10 @@ body.theme--dark .footer {
         grid-template-columns: 1fr;
     }
 
+    .season-progress__track {
+        grid-template-columns: repeat(auto-fit, minmax(56px, 1fr));
+    }
+
     .related-card {
         grid-template-columns: 90px minmax(0, 1fr);
     }
@@ -2132,6 +2238,15 @@ body.theme--dark .footer {
 
     .timeline-preview__poster {
         max-width: 132px;
+    }
+
+    .season-progress {
+        padding: 16px;
+    }
+
+    .season-progress__head,
+    .season-progress__detail {
+        align-items: stretch;
     }
 
     .search-widget__bar,

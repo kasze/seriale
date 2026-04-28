@@ -553,10 +553,57 @@ const initEpisodeTimeline = (root) => {
     todayButton.hidden = currentOffset === -2;
 };
 
+const initSeasonProgress = (root) => {
+    const markers = Array.from(root.querySelectorAll("[data-season-marker]"));
+    const detail = root.querySelector("[data-season-detail]");
+
+    if (!markers.length || !detail) {
+        return;
+    }
+
+    const code = detail.querySelector("[data-season-detail-code]");
+    const title = detail.querySelector("[data-season-detail-title]");
+    const date = detail.querySelector("[data-season-detail-date]");
+    const status = detail.querySelector("[data-season-detail-status]");
+
+    const activate = (marker) => {
+        markers.forEach((item) => {
+            const active = item === marker;
+            item.classList.toggle("is-active", active);
+            item.setAttribute("aria-pressed", active ? "true" : "false");
+        });
+
+        if (code) {
+            code.textContent = marker.dataset.code || "";
+        }
+
+        if (title) {
+            title.textContent = marker.dataset.title || "";
+        }
+
+        if (date) {
+            date.textContent = [marker.dataset.date, marker.dataset.relative].filter(Boolean).join(" · ");
+        }
+
+        if (status) {
+            status.textContent = marker.dataset.status || "";
+            const aired = marker.classList.contains("season-progress__marker--aired");
+            status.classList.toggle("pill--aired", aired);
+            status.classList.toggle("pill--upcoming", !aired);
+        }
+    };
+
+    markers.forEach((marker) => {
+        marker.addEventListener("click", () => activate(marker));
+        marker.addEventListener("focus", () => activate(marker));
+    });
+};
+
 document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll("[data-search-widget]").forEach(initSearchWidget);
     initCountdowns();
     document.querySelectorAll("[data-tabs]").forEach(initTabs);
     initAjaxTrackForms();
     document.querySelectorAll("[data-episode-timeline]").forEach(initEpisodeTimeline);
+    document.querySelectorAll("[data-season-progress]").forEach(initSeasonProgress);
 });

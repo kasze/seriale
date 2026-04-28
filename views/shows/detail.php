@@ -110,6 +110,42 @@ $externalRatings = array_values(array_filter([
             <?php if (!empty($show['tvmaze_url'])): ?><li><a href="<?= e((string) $show['tvmaze_url']) ?>" target="_blank" rel="noreferrer">TVmaze</a></li><?php endif; ?>
             <?php if (!empty($show['official_site'])): ?><li><a href="<?= e((string) $show['official_site']) ?>" target="_blank" rel="noreferrer">Oficjalna strona</a></li><?php endif; ?>
         </ul>
+        <?php if (!empty($seasonProgress) && !empty($seasonProgress['markers'])): ?>
+            <?php $selectedMarker = $seasonProgress['selected'] ?? $seasonProgress['markers'][0]; ?>
+            <div class="season-progress" data-season-progress>
+                <div class="season-progress__head">
+                    <div>
+                        <h3><?= e((string) ($seasonProgress['season_name'] ?? 'Sezon')) ?></h3>
+                        <p><?= e(sprintf('%d z %d odcinków wyemitowanych', (int) ($seasonProgress['aired_count'] ?? 0), (int) ($seasonProgress['total_count'] ?? 0))) ?></p>
+                    </div>
+                    <span class="pill pill--muted"><?= e((string) ($seasonProgress['total_count'] ?? 0)) ?> odc.</span>
+                </div>
+                <div class="season-progress__track" role="list" aria-label="Przebieg sezonu">
+                    <?php foreach ($seasonProgress['markers'] as $marker): ?>
+                        <button
+                            type="button"
+                            class="season-progress__marker season-progress__marker--<?= e((string) ($marker['status_key'] ?? 'upcoming')) ?> <?= (($selectedMarker['id'] ?? null) === ($marker['id'] ?? null)) ? 'is-active' : '' ?> <?= !empty($marker['is_latest']) ? 'is-latest' : '' ?> <?= !empty($marker['is_next']) ? 'is-next' : '' ?>"
+                            data-season-marker
+                            data-id="<?= e((string) ($marker['id'] ?? '')) ?>"
+                            data-code="<?= e((string) ($marker['full_code'] ?? '')) ?>"
+                            data-title="<?= e((string) ($marker['title'] ?? '')) ?>"
+                            data-date="<?= e((string) ($marker['date'] ?? '')) ?>"
+                            data-relative="<?= e((string) ($marker['relative'] ?? '')) ?>"
+                            data-status="<?= e((string) ($marker['status'] ?? '')) ?>"
+                            aria-pressed="<?= (($selectedMarker['id'] ?? null) === ($marker['id'] ?? null)) ? 'true' : 'false' ?>"
+                        >
+                            <span><?= e((string) ($marker['code'] ?? '')) ?></span>
+                        </button>
+                    <?php endforeach; ?>
+                </div>
+                <div class="season-progress__detail" data-season-detail>
+                    <strong data-season-detail-code><?= e((string) ($selectedMarker['full_code'] ?? '')) ?></strong>
+                    <span data-season-detail-title><?= e((string) ($selectedMarker['title'] ?? '')) ?></span>
+                    <span data-season-detail-date><?= e((string) ($selectedMarker['date'] ?? '')) ?></span>
+                    <span class="pill <?= (($selectedMarker['status_key'] ?? 'upcoming') === 'aired') ? 'pill--aired' : 'pill--upcoming' ?>" data-season-detail-status><?= e((string) ($selectedMarker['status'] ?? '')) ?></span>
+                </div>
+            </div>
+        <?php endif; ?>
     </article>
 </section>
 
