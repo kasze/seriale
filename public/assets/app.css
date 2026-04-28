@@ -1242,6 +1242,23 @@ body.theme--dark .episode-feed__time-note--yesterday {
     align-items: stretch;
     overflow-x: auto;
     padding-bottom: 4px;
+    cursor: grab;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(98, 121, 177, 0.34) transparent;
+}
+
+.timeline-strip::-webkit-scrollbar {
+    height: 10px;
+}
+
+.timeline-strip::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: rgba(98, 121, 177, 0.34);
+}
+
+.timeline-strip.is-dragging {
+    cursor: grabbing;
+    user-select: none;
 }
 
 .timeline-day {

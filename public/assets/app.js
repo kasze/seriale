@@ -331,8 +331,9 @@ const buildTimelinePoster = (title, posterUrl) => {
 const initEpisodeTimeline = (root) => {
     const buttons = Array.from(root.querySelectorAll("[data-timeline-event]"));
     const preview = root.querySelector("[data-timeline-preview]");
+    const strip = root.querySelector(".timeline-strip");
 
-    if (!buttons.length || !preview) {
+    if (!buttons.length || !preview || !strip) {
         return;
     }
 
@@ -407,6 +408,62 @@ const initEpisodeTimeline = (root) => {
     buttons.forEach((button) => {
         button.addEventListener("click", () => activate(button));
     });
+
+    strip.addEventListener(
+        "wheel",
+        (event) => {
+            if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) {
+                return;
+            }
+
+            event.preventDefault();
+            strip.scrollBy({
+                left: event.deltaY,
+            });
+        },
+        { passive: false }
+    );
+
+    let pointerId = null;
+    let dragStartX = 0;
+    let scrollStartX = 0;
+
+    strip.addEventListener("pointerdown", (event) => {
+        if (event.pointerType === "mouse" && event.button !== 0) {
+            return;
+        }
+
+        pointerId = event.pointerId;
+        dragStartX = event.clientX;
+        scrollStartX = strip.scrollLeft;
+        strip.classList.add("is-dragging");
+        strip.setPointerCapture(event.pointerId);
+    });
+
+    strip.addEventListener("pointermove", (event) => {
+        if (pointerId !== event.pointerId) {
+            return;
+        }
+
+        const delta = event.clientX - dragStartX;
+        strip.scrollLeft = scrollStartX - delta;
+    });
+
+    const stopDragging = (event) => {
+        if (pointerId !== event.pointerId) {
+            return;
+        }
+
+        pointerId = null;
+        strip.classList.remove("is-dragging");
+
+        if (strip.hasPointerCapture(event.pointerId)) {
+            strip.releasePointerCapture(event.pointerId);
+        }
+    };
+
+    strip.addEventListener("pointerup", stopDragging);
+    strip.addEventListener("pointercancel", stopDragging);
 };
 
 document.addEventListener("DOMContentLoaded", () => {
