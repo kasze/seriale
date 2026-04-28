@@ -374,8 +374,9 @@ const initEpisodeTimeline = (root) => {
     const range = root.querySelector("[data-timeline-range]");
     const prevButton = root.querySelector('[data-timeline-nav="prev"]');
     const nextButton = root.querySelector('[data-timeline-nav="next"]');
+    const todayButton = root.querySelector("[data-timeline-today]");
 
-    if (!preview || !strip || !endpoint || !range || !prevButton || !nextButton) {
+    if (!preview || !strip || !endpoint || !range || !prevButton || !nextButton || !todayButton) {
         return;
     }
 
@@ -460,6 +461,8 @@ const initEpisodeTimeline = (root) => {
         range.textContent = timeline.window_label || "";
         prevButton.dataset.offset = String(timeline.previous_offset ?? currentOffset - 7);
         nextButton.dataset.offset = String(timeline.next_offset ?? currentOffset + 7);
+        todayButton.dataset.offset = "-2";
+        todayButton.hidden = currentOffset === -2;
 
         const selected = timeline.selected || null;
         selectedId = selected?.id || "";
@@ -477,6 +480,7 @@ const initEpisodeTimeline = (root) => {
         preview.classList.add("is-loading");
         prevButton.disabled = true;
         nextButton.disabled = true;
+        todayButton.disabled = true;
 
         try {
             const response = await fetch(`${endpoint}?format=json&offset=${encodeURIComponent(offset)}`, {
@@ -500,6 +504,7 @@ const initEpisodeTimeline = (root) => {
             preview.classList.remove("is-loading");
             prevButton.disabled = false;
             nextButton.disabled = false;
+            todayButton.disabled = false;
         }
     };
 
@@ -509,6 +514,10 @@ const initEpisodeTimeline = (root) => {
 
     nextButton.addEventListener("click", () => {
         loadTimeline(Number.parseInt(nextButton.dataset.offset || String(currentOffset + 7), 10));
+    });
+
+    todayButton.addEventListener("click", () => {
+        loadTimeline(-2);
     });
 
     preview.addEventListener("click", (event) => {
@@ -530,6 +539,7 @@ const initEpisodeTimeline = (root) => {
     });
 
     bindEvents();
+    todayButton.hidden = currentOffset === -2;
 };
 
 document.addEventListener("DOMContentLoaded", () => {

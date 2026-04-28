@@ -1247,6 +1247,27 @@ body.theme--dark .episode-feed__time-note--yesterday {
     font-weight: 800;
 }
 
+.timeline-today-link {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--muted);
+    font: inherit;
+    font-size: 0.92rem;
+    cursor: pointer;
+    transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.timeline-today-link:hover,
+.timeline-today-link:focus-visible {
+    color: var(--accent-ink);
+    outline: none;
+}
+
+.timeline-today-link[hidden] {
+    display: none;
+}
+
 .timeline-card__head h2,
 .timeline-preview__body h3 {
     margin: 0;

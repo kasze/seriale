@@ -26,6 +26,7 @@ $timeline = $dashboard['timeline'] ?? [
             <div class="timeline-card__nav">
                 <button type="button" class="button button--ghost timeline-nav-button" data-timeline-nav="prev" data-offset="<?= e((string) ($timeline['previous_offset'] ?? -9)) ?>" aria-label="Poprzedni zakres">&#8592;</button>
                 <strong class="timeline-card__range" data-timeline-range><?= e((string) ($timeline['window_label'] ?? '')) ?></strong>
+                <button type="button" class="timeline-today-link" data-timeline-today data-offset="-2">Dziś</button>
                 <button type="button" class="button button--ghost timeline-nav-button" data-timeline-nav="next" data-offset="<?= e((string) ($timeline['next_offset'] ?? 5)) ?>" aria-label="Następny zakres">&#8594;</button>
             </div>
         </div>
