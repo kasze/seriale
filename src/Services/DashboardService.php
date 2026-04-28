@@ -126,11 +126,7 @@ final class DashboardService
             'has_episodes' => $timelineAll !== [],
             'previous_offset' => $startOffset - $days,
             'next_offset' => $startOffset + $days,
-            'window_label' => sprintf(
-                '%s - %s',
-                format_date($windowStart->format(DATE_ATOM)),
-                format_date($windowEnd->format(DATE_ATOM))
-            ),
+            'window_label' => $this->formatTimelineRangeLabel($windowStart, $windowEnd),
         ];
     }
 
@@ -147,5 +143,37 @@ final class DashboardService
         }
 
         return rtrim(mb_substr($title, 0, $limit));
+    }
+
+    private function formatTimelineRangeLabel(DateTimeImmutable $start, DateTimeImmutable $end): string
+    {
+        $sameYear = $start->format('Y') === $end->format('Y');
+        $startLabel = $start->format('j') . ' ' . $this->monthShort((int) $start->format('n'));
+        $endLabel = $end->format('j') . ' ' . $this->monthShort((int) $end->format('n'));
+
+        if ($sameYear) {
+            return $startLabel . ' - ' . $endLabel . ' ' . $start->format('Y');
+        }
+
+        return $startLabel . ' ' . $start->format('Y') . ' - ' . $endLabel . ' ' . $end->format('Y');
+    }
+
+    private function monthShort(int $month): string
+    {
+        return match ($month) {
+            1 => 'sty',
+            2 => 'lut',
+            3 => 'mar',
+            4 => 'kwi',
+            5 => 'maj',
+            6 => 'cze',
+            7 => 'lip',
+            8 => 'sie',
+            9 => 'wrz',
+            10 => 'paź',
+            11 => 'lis',
+            12 => 'gru',
+            default => '',
+        };
     }
 }
