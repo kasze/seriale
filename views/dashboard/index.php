@@ -94,7 +94,7 @@ $timeline = $dashboard['timeline'] ?? [
                                     title="<?= e((string) ($entry['title'] ?? '')) ?>"
                                     aria-pressed="<?= (($timeline['selected']['id'] ?? null) === ($entry['id'] ?? null)) ? 'true' : 'false' ?>"
                                 >
-                                    <span class="timeline-event__label"><?= e((string) ($entry['short_title'] ?? 'Bez tytułu')) ?></span>
+                                    <span class="timeline-event__label"><span class="timeline-event__label-text"><?= e((string) ($entry['short_title'] ?? 'Bez tytułu')) ?></span></span>
                                 </button>
                             <?php endforeach; ?>
                         <?php endif; ?>

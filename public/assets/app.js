@@ -380,7 +380,7 @@ const renderTimelineEvent = (entry, selectedId) => `
         title="${escapeHtml(entry.title || "")}"
         aria-pressed="${selectedId === entry.id ? "true" : "false"}"
     >
-        <span class="timeline-event__label">${escapeHtml(entry.short_title || "Bez tytułu")}</span>
+        <span class="timeline-event__label"><span class="timeline-event__label-text">${escapeHtml(entry.short_title || "Bez tytułu")}</span></span>
     </button>
 `;
 
@@ -400,12 +400,19 @@ const renderTimelineDay = (day, selectedId) => `
 `;
 
 const initTimelineLabelScroll = (root) => {
-    root.querySelectorAll(".timeline-event__label").forEach((label) => {
-        if (label.dataset.scrollReady === "true") {
+    root.querySelectorAll(".timeline-event").forEach((eventNode) => {
+        if (eventNode.dataset.marqueeReady === "true") {
             return;
         }
 
-        label.dataset.scrollReady = "true";
+        eventNode.dataset.marqueeReady = "true";
+        const label = eventNode.querySelector(".timeline-event__label");
+        const text = eventNode.querySelector(".timeline-event__label-text");
+
+        if (!label || !text) {
+            return;
+        }
+
         let hoverTimer = null;
 
         const reset = () => {
@@ -413,15 +420,14 @@ const initTimelineLabelScroll = (root) => {
                 window.clearTimeout(hoverTimer);
                 hoverTimer = null;
             }
-
-            label.scrollTo({
-                left: 0,
-                behavior: "smooth",
-            });
+            eventNode.classList.remove("is-marquee");
+            eventNode.style.removeProperty("--marquee-shift");
         };
 
         const start = () => {
-            if (label.scrollWidth <= label.clientWidth + 4) {
+            const overflow = text.scrollWidth - label.clientWidth;
+
+            if (overflow <= 6) {
                 return;
             }
 
@@ -430,18 +436,15 @@ const initTimelineLabelScroll = (root) => {
             }
 
             hoverTimer = window.setTimeout(() => {
-                label.scrollTo({
-                    left: label.scrollWidth - label.clientWidth,
-                    behavior: "smooth",
-                });
+                eventNode.style.setProperty("--marquee-shift", `${overflow}px`);
+                eventNode.classList.add("is-marquee");
             }, 180);
         };
 
-        const trigger = label.closest(".timeline-event") || label;
-        trigger.addEventListener("mouseenter", start);
-        trigger.addEventListener("focus", start, true);
-        trigger.addEventListener("mouseleave", reset);
-        trigger.addEventListener("blur", reset, true);
+        eventNode.addEventListener("mouseenter", start);
+        eventNode.addEventListener("focus", start, true);
+        eventNode.addEventListener("mouseleave", reset);
+        eventNode.addEventListener("blur", reset, true);
     });
 };
 

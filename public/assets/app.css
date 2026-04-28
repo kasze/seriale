@@ -1397,16 +1397,19 @@ body.theme--dark .episode-feed__time-note--yesterday {
     min-width: 0;
     width: 100%;
     max-width: 100%;
-    overflow-x: auto;
-    overflow-y: hidden;
+    overflow: hidden;
     white-space: nowrap;
-    text-overflow: clip;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
 }
 
-.timeline-event__label::-webkit-scrollbar {
-    display: none;
+.timeline-event__label-text {
+    display: inline-block;
+    min-width: 100%;
+    transform: translateX(0);
+    transition: transform 1.4s ease;
+}
+
+.timeline-event.is-marquee .timeline-event__label-text {
+    transform: translateX(calc(-1 * var(--marquee-shift, 0px)));
 }
 
 .timeline-preview {
