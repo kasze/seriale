@@ -1301,11 +1301,16 @@ body.theme--dark .episode-feed__time-note--yesterday {
 .timeline-day__head strong {
     font-size: 1.3rem;
     color: var(--accent-ink);
+    flex: 0 0 auto;
 }
 
 .timeline-day__label,
 .timeline-day__empty {
     color: var(--muted);
+}
+
+.timeline-day__label {
+    min-width: 0;
 }
 
 .timeline-day__rail {
@@ -1332,8 +1337,9 @@ body.theme--dark .episode-feed__time-note--yesterday {
     z-index: 1;
     display: inline-flex;
     align-items: center;
+    max-width: 100%;
     min-height: 34px;
-    padding: 8px 12px;
+    padding: 8px 10px;
     border-radius: 999px;
     border: 1px solid transparent;
     background: rgba(255, 255, 255, 0.9);
@@ -1365,7 +1371,7 @@ body.theme--dark .episode-feed__time-note--yesterday {
 
 .timeline-event__label {
     display: block;
-    max-width: 92px;
+    max-width: 68px;
     overflow: hidden;
     text-overflow: clip;
     white-space: nowrap;
