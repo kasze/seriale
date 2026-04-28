@@ -1289,10 +1289,12 @@ body.theme--dark .episode-feed__time-note--yesterday {
     display: grid;
     align-content: start;
     gap: 14px;
+    min-width: 0;
     padding: 16px 14px 18px;
     border-radius: 24px;
     background: rgba(255, 255, 255, 0.62);
     border: 1px solid rgba(123, 141, 191, 0.12);
+    overflow: hidden;
     transition: transform 0.22s ease, border-color 0.22s ease, background 0.22s ease, box-shadow 0.22s ease;
 }
 
@@ -1346,6 +1348,7 @@ body.theme--dark .episode-feed__time-note--yesterday {
     flex-direction: column;
     gap: 8px;
     align-items: stretch;
+    min-width: 0;
     min-height: 42px;
 }
 
@@ -1355,17 +1358,19 @@ body.theme--dark .episode-feed__time-note--yesterday {
     display: inline-flex;
     align-items: center;
     width: 100%;
+    min-width: 0;
     max-width: 100%;
     min-height: 34px;
-    padding: 8px 10px;
+    padding: 7px 10px;
     border-radius: 999px;
     border: 1px solid transparent;
     background: rgba(255, 255, 255, 0.9);
     color: var(--text);
     font: inherit;
-    font-size: 0.8rem;
+    font-size: 0.76rem;
     font-weight: 700;
     cursor: pointer;
+    overflow: hidden;
     transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
     touch-action: manipulation;
 }
@@ -1389,16 +1394,12 @@ body.theme--dark .episode-feed__time-note--yesterday {
 
 .timeline-event__label {
     display: block;
+    min-width: 0;
     width: 100%;
     max-width: 100%;
-    overflow-x: auto;
-    overflow-y: hidden;
+    overflow: hidden;
+    text-overflow: ellipsis;
     white-space: nowrap;
-    scrollbar-width: none;
-}
-
-.timeline-event__label::-webkit-scrollbar {
-    display: none;
 }
 
 .timeline-preview {
