@@ -31,7 +31,7 @@ final class DashboardService
         ];
     }
 
-    public function timelineWindow(int $userId, int $startOffset = -2, int $days = 8): array
+    public function timelineWindow(int $userId, int $startOffset = -2, int $days = 7): array
     {
         $days = max(1, $days);
         $timezone = app('timezone');
@@ -86,7 +86,7 @@ final class DashboardService
             $entry = [
                 'id' => 'timeline-' . (string) ($episode['id'] ?? md5((string) ($episode['show_id_local'] ?? '') . $dayKey . $episodeCode)),
                 'title' => $title,
-                'short_title' => $this->shortTitle($title, 18),
+                'short_title' => $this->shortTitle($title, 22),
                 'show_url' => path_url('/shows/' . (string) ($episode['show_id_local'] ?? '')),
                 'episode_code' => $episodeCode,
                 'episode_name' => (string) ($episode['name'] ?? 'Bez tytułu'),

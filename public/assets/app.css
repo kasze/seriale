@@ -1259,7 +1259,7 @@ body.theme--dark .episode-feed__time-note--yesterday {
 
 .timeline-strip {
     display: grid;
-    grid-template-columns: repeat(8, minmax(0, 1fr));
+    grid-template-columns: repeat(7, minmax(0, 1fr));
     gap: 12px;
     align-items: stretch;
 }
@@ -1371,7 +1371,7 @@ body.theme--dark .episode-feed__time-note--yesterday {
 
 .timeline-event__label {
     display: block;
-    max-width: 68px;
+    max-width: 84px;
     overflow: hidden;
     text-overflow: clip;
     white-space: nowrap;

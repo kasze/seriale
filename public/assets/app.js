@@ -458,8 +458,8 @@ const initEpisodeTimeline = (root) => {
         currentOffset = Number.parseInt(timeline.start_offset ?? currentOffset, 10) || currentOffset;
         root.dataset.offset = String(currentOffset);
         range.textContent = timeline.window_label || "";
-        prevButton.dataset.offset = String(timeline.previous_offset ?? currentOffset - 9);
-        nextButton.dataset.offset = String(timeline.next_offset ?? currentOffset + 9);
+        prevButton.dataset.offset = String(timeline.previous_offset ?? currentOffset - 7);
+        nextButton.dataset.offset = String(timeline.next_offset ?? currentOffset + 7);
 
         const selected = timeline.selected || null;
         selectedId = selected?.id || "";
@@ -504,11 +504,11 @@ const initEpisodeTimeline = (root) => {
     };
 
     prevButton.addEventListener("click", () => {
-        loadTimeline(Number.parseInt(prevButton.dataset.offset || String(currentOffset - 9), 10));
+        loadTimeline(Number.parseInt(prevButton.dataset.offset || String(currentOffset - 7), 10));
     });
 
     nextButton.addEventListener("click", () => {
-        loadTimeline(Number.parseInt(nextButton.dataset.offset || String(currentOffset + 9), 10));
+        loadTimeline(Number.parseInt(nextButton.dataset.offset || String(currentOffset + 7), 10));
     });
 
     bindEvents();
