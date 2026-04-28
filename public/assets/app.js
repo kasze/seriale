@@ -328,6 +328,54 @@ const buildTimelinePoster = (title, posterUrl) => {
     return `<div class="show-card__placeholder" aria-hidden="true">${escapeHtml(letter)}</div>`;
 };
 
+const renderSeasonProgress = (seasonProgress) => {
+    if (!seasonProgress || !(seasonProgress.markers || []).length) {
+        return "";
+    }
+
+    const selected = seasonProgress.selected || seasonProgress.markers[0];
+
+    return `
+        <div class="season-progress season-progress--compact" data-season-progress>
+            <div class="season-progress__head">
+                <div>
+                    <h3>${escapeHtml(seasonProgress.season_name || "Sezon")}</h3>
+                    <p>${escapeHtml(`${seasonProgress.aired_count || 0} z ${seasonProgress.total_count || 0} odcinków wyemitowanych`)}</p>
+                </div>
+                <span class="pill pill--muted">${escapeHtml(String(seasonProgress.total_count || 0))} odc.</span>
+            </div>
+            <div class="season-progress__track" role="list" aria-label="Przebieg sezonu">
+                ${(seasonProgress.markers || [])
+                    .map(
+                        (marker) => `
+                            <button
+                                type="button"
+                                class="season-progress__marker season-progress__marker--${escapeHtml(marker.status_key || "upcoming")} ${selected.id === marker.id ? "is-active" : ""} ${marker.is_latest ? "is-latest" : ""} ${marker.is_next ? "is-next" : ""}"
+                                data-season-marker
+                                data-id="${escapeHtml(marker.id || "")}"
+                                data-code="${escapeHtml(marker.full_code || "")}"
+                                data-title="${escapeHtml(marker.title || "")}"
+                                data-date="${escapeHtml(marker.date || "")}"
+                                data-relative="${escapeHtml(marker.relative || "")}"
+                                data-status="${escapeHtml(marker.status || "")}"
+                                aria-pressed="${selected.id === marker.id ? "true" : "false"}"
+                            >
+                                <span>${escapeHtml(marker.code || "")}</span>
+                            </button>
+                        `
+                    )
+                    .join("")}
+            </div>
+            <div class="season-progress__detail" data-season-detail>
+                <strong data-season-detail-code>${escapeHtml(selected.full_code || "")}</strong>
+                <span data-season-detail-title>${escapeHtml(selected.title || "")}</span>
+                <span data-season-detail-date>${escapeHtml([selected.date, selected.relative].filter(Boolean).join(" · "))}</span>
+                <span class="pill ${(selected.status_key || "upcoming") === "aired" ? "pill--aired" : "pill--upcoming"}" data-season-detail-status>${escapeHtml(selected.status || "")}</span>
+            </div>
+        </div>
+    `;
+};
+
 const renderTimelineEvent = (entry, selectedId) => `
     <button
         type="button"
@@ -345,6 +393,7 @@ const renderTimelineEvent = (entry, selectedId) => `
         data-poster-url="${escapeHtml(entry.poster_url || "")}"
         data-tpb-url="${escapeHtml(entry.tpb_url || "")}"
         data-btdig-url="${escapeHtml(entry.btdig_url || "")}"
+        data-season-progress="${escapeHtml(JSON.stringify(entry.season_progress || null))}"
         title="${escapeHtml(entry.title || "")}"
         aria-pressed="${selectedId === entry.id ? "true" : "false"}"
     >
@@ -434,8 +483,11 @@ const initEpisodeTimeline = (root) => {
                     <a class="button button--primary" href="${escapeHtml(entry.show_url || "#")}" data-timeline-show>Przejdź do serialu</a>
                     ${sourceLinks}
                 </div>
+                ${renderSeasonProgress(entry.season_progress || null)}
             </div>
         `;
+
+        preview.querySelectorAll("[data-season-progress]").forEach(initSeasonProgress);
     };
 
     const bindEvents = () => {
@@ -461,6 +513,7 @@ const initEpisodeTimeline = (root) => {
                     poster_url: button.dataset.posterUrl || "",
                     tpb_url: button.dataset.tpbUrl || "",
                     btdig_url: button.dataset.btdigUrl || "",
+                    season_progress: JSON.parse(button.dataset.seasonProgress || "null"),
                 });
             });
         });

@@ -187,7 +187,8 @@ $container->singleton(TrackedShowService::class, static fn (Container $container
 ));
 $container->singleton(DashboardService::class, static fn (Container $container) => new DashboardService(
     $container->get(TrackedShowRepository::class),
-    $container->get(ShowRepository::class)
+    $container->get(ShowRepository::class),
+    $container->get(EpisodeRepository::class)
 ));
 $container->singleton(SimilarShowsService::class, static fn (Container $container) => new SimilarShowsService(
     $container->get(TMDbClient::class),

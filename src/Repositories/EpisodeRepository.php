@@ -57,4 +57,30 @@ final class EpisodeRepository extends BaseRepository
 
         return $statement->fetchAll();
     }
+
+    public function forShowSeason(int $showId, ?int $seasonNumber): array
+    {
+        $sql = 'SELECT e.*, s.`name` AS `season_name` FROM ' . $this->table('episodes') . ' e ' .
+            'LEFT JOIN ' . $this->table('seasons') . ' s ON s.`id` = e.`season_id` ' .
+            'WHERE e.`show_id` = :show_id ';
+
+        if ($seasonNumber === null) {
+            $sql .= 'AND e.`season_number` IS NULL ';
+        } else {
+            $sql .= 'AND e.`season_number` = :season_number ';
+        }
+
+        $sql .= 'ORDER BY (e.`episode_number` IS NULL) ASC, e.`episode_number` ASC, (e.`airstamp` IS NULL) ASC, e.`airstamp` ASC, e.`id` ASC';
+
+        $statement = $this->pdo->prepare($sql);
+        $statement->bindValue('show_id', $showId, \PDO::PARAM_INT);
+
+        if ($seasonNumber !== null) {
+            $statement->bindValue('season_number', $seasonNumber, \PDO::PARAM_INT);
+        }
+
+        $statement->execute();
+
+        return $statement->fetchAll();
+    }
 }

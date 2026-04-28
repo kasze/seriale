@@ -1737,6 +1737,22 @@ body.theme--dark .auth-card {
     border: 1px solid var(--line);
 }
 
+.season-progress--compact {
+    margin-top: 14px;
+    padding: 16px;
+}
+
+.season-progress--compact .season-progress__track {
+    grid-template-columns: repeat(auto-fit, minmax(52px, 1fr));
+    gap: 8px;
+}
+
+.season-progress--compact .season-progress__marker {
+    min-height: 40px;
+    padding: 8px 6px;
+    border-radius: 14px;
+}
+
 .season-progress__head {
     display: flex;
     justify-content: space-between;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Repositories\EpisodeRepository;
 use App\Repositories\ShowRepository;
 use App\Repositories\TrackedShowRepository;
 use DateTimeImmutable;
@@ -13,7 +14,8 @@ final class DashboardService
 {
     public function __construct(
         private TrackedShowRepository $tracked,
-        private ShowRepository $shows
+        private ShowRepository $shows,
+        private EpisodeRepository $episodes
     ) {
     }
 
@@ -62,6 +64,7 @@ final class DashboardService
             $windowEnd->format(DATE_ATOM)
         );
         $timelineAll = [];
+        $seasonProgressCache = [];
 
         foreach ($episodes as $episode) {
             $stampValue = trim((string) ($episode['airstamp'] ?? ''));
@@ -83,6 +86,12 @@ final class DashboardService
             $episodeNumber = isset($episode['episode_number']) ? (int) $episode['episode_number'] : null;
             $episodeCode = sprintf('S%02dE%02d', (int) ($seasonNumber ?? 0), (int) ($episodeNumber ?? 0));
             $title = (string) ($episode['title'] ?? '');
+            $cacheKey = (string) ($episode['show_id_local'] ?? '0') . ':' . (string) ($seasonNumber ?? 'special');
+            $seasonProgressCache[$cacheKey] ??= $this->buildSeasonProgress(
+                (int) ($episode['show_id_local'] ?? 0),
+                $seasonNumber,
+                $episodeCode
+            );
             $entry = [
                 'id' => 'timeline-' . (string) ($episode['id'] ?? md5((string) ($episode['show_id_local'] ?? '') . $dayKey . $episodeCode)),
                 'title' => $title,
@@ -97,6 +106,7 @@ final class DashboardService
                 'poster_url' => (string) ($episode['poster_url'] ?? ''),
                 'tpb_url' => $isAired ? tpb_episode_search_url($title, $seasonNumber, $episodeNumber) : '',
                 'btdig_url' => $isAired ? btdig_episode_search_url($title, $seasonNumber, $episodeNumber) : '',
+                'season_progress' => $seasonProgressCache[$cacheKey],
                 'timestamp' => $stamp->getTimestamp(),
             ];
 
@@ -175,5 +185,65 @@ final class DashboardService
             12 => 'gru',
             default => '',
         };
+    }
+
+    private function buildSeasonProgress(int $showId, ?int $seasonNumber, string $preferredCode): ?array
+    {
+        if ($showId <= 0) {
+            return null;
+        }
+
+        $episodes = $this->episodes->forShowSeason($showId, $seasonNumber);
+
+        if ($episodes === []) {
+            return null;
+        }
+
+        $markers = [];
+        $airedCount = 0;
+        $selected = null;
+
+        foreach ($episodes as $index => $episode) {
+            $episodeCode = sprintf(
+                'S%02dE%02d',
+                (int) ($episode['season_number'] ?? 0),
+                (int) ($episode['episode_number'] ?? 0)
+            );
+            $isAired = !empty($episode['airstamp']) && strtotime((string) $episode['airstamp']) <= time();
+
+            if ($isAired) {
+                $airedCount++;
+            }
+
+            $marker = [
+                'id' => 'season-progress-' . (string) ($episode['id'] ?? ($index + 1)),
+                'code' => sprintf('E%02d', (int) ($episode['episode_number'] ?? ($index + 1))),
+                'full_code' => $episodeCode,
+                'title' => (string) ($episode['name'] ?? 'Bez tytułu'),
+                'date' => format_airing_date($episode['airstamp'] ?? $episode['airdate'] ?? null, $episode['airtime'] ?? null),
+                'relative' => relative_date($episode['airstamp'] ?? $episode['airdate'] ?? null),
+                'status' => $isAired ? 'Wyemitowany' : 'Nadchodzący',
+                'status_key' => $isAired ? 'aired' : 'upcoming',
+                'is_latest' => false,
+                'is_next' => !$isAired && $selected === null,
+            ];
+
+            if ($selected === null && $episodeCode === $preferredCode) {
+                $selected = $marker;
+            }
+
+            $markers[] = $marker;
+        }
+
+        $selected ??= $markers[0] ?? null;
+
+        return [
+            'season_name' => (string) ($episodes[0]['season_name'] ?? ('Sezon ' . ($seasonNumber ?? '?'))),
+            'season_number' => $seasonNumber,
+            'total_count' => count($markers),
+            'aired_count' => $airedCount,
+            'selected' => $selected,
+            'markers' => $markers,
+        ];
     }
 }

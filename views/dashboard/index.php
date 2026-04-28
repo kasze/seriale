@@ -2,6 +2,52 @@
 
 declare(strict_types=1);
 
+if (!function_exists('render_season_progress')) {
+    function render_season_progress(?array $seasonProgress): void
+    {
+        if (empty($seasonProgress) || empty($seasonProgress['markers'])) {
+            return;
+        }
+
+        $selectedMarker = $seasonProgress['selected'] ?? $seasonProgress['markers'][0];
+        ?>
+        <div class="season-progress season-progress--compact" data-season-progress>
+            <div class="season-progress__head">
+                <div>
+                    <h3><?= e((string) ($seasonProgress['season_name'] ?? 'Sezon')) ?></h3>
+                    <p><?= e(sprintf('%d z %d odcinków wyemitowanych', (int) ($seasonProgress['aired_count'] ?? 0), (int) ($seasonProgress['total_count'] ?? 0))) ?></p>
+                </div>
+                <span class="pill pill--muted"><?= e((string) ($seasonProgress['total_count'] ?? 0)) ?> odc.</span>
+            </div>
+            <div class="season-progress__track" role="list" aria-label="Przebieg sezonu">
+                <?php foreach ($seasonProgress['markers'] as $marker): ?>
+                    <button
+                        type="button"
+                        class="season-progress__marker season-progress__marker--<?= e((string) ($marker['status_key'] ?? 'upcoming')) ?> <?= (($selectedMarker['id'] ?? null) === ($marker['id'] ?? null)) ? 'is-active' : '' ?> <?= !empty($marker['is_latest']) ? 'is-latest' : '' ?> <?= !empty($marker['is_next']) ? 'is-next' : '' ?>"
+                        data-season-marker
+                        data-id="<?= e((string) ($marker['id'] ?? '')) ?>"
+                        data-code="<?= e((string) ($marker['full_code'] ?? '')) ?>"
+                        data-title="<?= e((string) ($marker['title'] ?? '')) ?>"
+                        data-date="<?= e((string) ($marker['date'] ?? '')) ?>"
+                        data-relative="<?= e((string) ($marker['relative'] ?? '')) ?>"
+                        data-status="<?= e((string) ($marker['status'] ?? '')) ?>"
+                        aria-pressed="<?= (($selectedMarker['id'] ?? null) === ($marker['id'] ?? null)) ? 'true' : 'false' ?>"
+                    >
+                        <span><?= e((string) ($marker['code'] ?? '')) ?></span>
+                    </button>
+                <?php endforeach; ?>
+            </div>
+            <div class="season-progress__detail" data-season-detail>
+                <strong data-season-detail-code><?= e((string) ($selectedMarker['full_code'] ?? '')) ?></strong>
+                <span data-season-detail-title><?= e((string) ($selectedMarker['title'] ?? '')) ?></span>
+                <span data-season-detail-date><?= e((string) (($selectedMarker['date'] ?? '') . (!empty($selectedMarker['relative']) ? ' · ' . $selectedMarker['relative'] : ''))) ?></span>
+                <span class="pill <?= (($selectedMarker['status_key'] ?? 'upcoming') === 'aired') ? 'pill--aired' : 'pill--upcoming' ?>" data-season-detail-status><?= e((string) ($selectedMarker['status'] ?? '')) ?></span>
+            </div>
+        </div>
+        <?php
+    }
+}
+
 $timeline = $dashboard['timeline'] ?? [
     'start_offset' => -2,
     'days' => [],
@@ -60,6 +106,7 @@ $timeline = $dashboard['timeline'] ?? [
                                     data-poster-url="<?= e((string) ($entry['poster_url'] ?? '')) ?>"
                                     data-tpb-url="<?= e((string) ($entry['tpb_url'] ?? '')) ?>"
                                     data-btdig-url="<?= e((string) ($entry['btdig_url'] ?? '')) ?>"
+                                    data-season-progress="<?= e(json_encode($entry['season_progress'] ?? null, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?: 'null') ?>"
                                     title="<?= e((string) ($entry['title'] ?? '')) ?>"
                                     aria-pressed="<?= (($timeline['selected']['id'] ?? null) === ($entry['id'] ?? null)) ? 'true' : 'false' ?>"
                                 >
@@ -101,6 +148,7 @@ $timeline = $dashboard['timeline'] ?? [
                             <a class="button button--ghost" href="<?= e((string) $selected['btdig_url']) ?>" data-timeline-btdig data-open-external target="_blank" rel="noreferrer noopener">BTDig</a>
                         <?php endif; ?>
                     </div>
+                    <?php render_season_progress($selected['season_progress'] ?? null); ?>
                 </div>
             <?php else: ?>
                 <div class="empty-state empty-state--soft timeline-preview__empty" data-timeline-empty>Brak odcinków w tym zakresie. Zmień zakres przyciskami powyżej.</div>
