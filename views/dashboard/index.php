@@ -11,12 +11,6 @@ if (!function_exists('render_season_progress')) {
 
         ?>
         <div class="season-progress season-progress--compact" data-season-progress>
-            <div class="season-progress__head">
-                <div>
-                    <h3><?= e((string) ($seasonProgress['season_name'] ?? 'Sezon')) ?></h3>
-                    <p><?= e(sprintf('%d z %d odcinków wyemitowanych', (int) ($seasonProgress['aired_count'] ?? 0), (int) ($seasonProgress['total_count'] ?? 0))) ?></p>
-                </div>
-            </div>
             <div class="season-progress__track" role="list" aria-label="Przebieg sezonu">
                 <?php foreach ($seasonProgress['markers'] as $marker): ?>
                     <span

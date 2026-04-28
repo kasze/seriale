@@ -335,12 +335,6 @@ const renderSeasonProgress = (seasonProgress) => {
 
     return `
         <div class="season-progress season-progress--compact" data-season-progress>
-            <div class="season-progress__head">
-                <div>
-                    <h3>${escapeHtml(seasonProgress.season_name || "Sezon")}</h3>
-                    <p>${escapeHtml(`${seasonProgress.aired_count || 0} z ${seasonProgress.total_count || 0} odcinków wyemitowanych`)}</p>
-                </div>
-            </div>
             <div class="season-progress__track" role="list" aria-label="Przebieg sezonu">
                 ${(seasonProgress.markers || [])
                     .map(

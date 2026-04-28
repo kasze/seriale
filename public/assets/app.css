@@ -1732,65 +1732,34 @@ body.theme--dark .auth-card {
 
 .season-progress {
     display: grid;
-    gap: 10px;
-    margin-top: 22px;
-    padding: 14px 14px 12px;
-    border-radius: 18px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(243, 248, 255, 0.56));
-    border: 1px solid rgba(123, 141, 191, 0.12);
+    gap: 8px;
+    margin-top: 12px;
+    justify-content: start;
 }
 
 .season-progress--compact {
-    margin-top: 12px;
-    padding: 12px 12px 10px;
-}
-
-.season-progress--compact .season-progress__track {
-    grid-template-columns: repeat(auto-fit, minmax(52px, 1fr));
-    gap: 8px;
-}
-
-.season-progress--compact .season-progress__marker {
-    min-height: 40px;
-    padding: 8px 6px;
-    border-radius: 14px;
-}
-
-.season-progress__head {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    align-items: start;
-}
-
-.season-progress__head h3,
-.season-progress__head p {
-    margin: 0;
-}
-
-.season-progress__head p {
-    margin-top: 2px;
-    color: var(--muted);
-    font-size: 0.84rem;
+    margin-top: 10px;
 }
 
 .season-progress__track {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
-    gap: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    max-width: min(100%, 430px);
 }
 
 .season-progress__marker {
     display: grid;
     place-items: center;
-    min-height: 36px;
-    padding: 7px 6px;
-    border-radius: 12px;
+    min-width: 44px;
+    min-height: 30px;
+    padding: 5px 7px;
+    border-radius: 11px;
     border: 1px solid var(--line);
     background: rgba(255, 255, 255, 0.8);
     color: var(--text);
     font: inherit;
-    font-size: 0.72rem;
+    font-size: 0.8rem;
     font-weight: 800;
 }
 
