@@ -318,9 +318,101 @@ const initAjaxTrackForms = () => {
     });
 };
 
+const buildTimelinePoster = (title, posterUrl) => {
+    if (posterUrl) {
+        return `<img src="${escapeHtml(posterUrl)}" alt="${escapeHtml(title)}" loading="lazy" decoding="async">`;
+    }
+
+    const letter = String(title || "?").trim().charAt(0) || "?";
+
+    return `<div class="show-card__placeholder" aria-hidden="true">${escapeHtml(letter)}</div>`;
+};
+
+const initEpisodeTimeline = (root) => {
+    const buttons = Array.from(root.querySelectorAll("[data-timeline-event]"));
+    const preview = root.querySelector("[data-timeline-preview]");
+
+    if (!buttons.length || !preview) {
+        return;
+    }
+
+    const poster = preview.querySelector("[data-timeline-poster]");
+    const status = preview.querySelector("[data-timeline-status]");
+    const when = preview.querySelector("[data-timeline-when]");
+    const relative = preview.querySelector("[data-timeline-relative]");
+    const title = preview.querySelector("[data-timeline-title]");
+    const episode = preview.querySelector("[data-timeline-episode]");
+    const showLink = preview.querySelector("[data-timeline-show]");
+    const tpbLink = preview.querySelector("[data-timeline-tpb]");
+    const btdigLink = preview.querySelector("[data-timeline-btdig]");
+
+    const updateLink = (link, href) => {
+        if (!link) {
+            return;
+        }
+
+        if (href) {
+            link.href = href;
+            link.hidden = false;
+            return;
+        }
+
+        link.hidden = true;
+    };
+
+    const activate = (button) => {
+        const payload = button.dataset;
+
+        buttons.forEach((item) => {
+            const active = item === button;
+            item.classList.toggle("is-active", active);
+            item.setAttribute("aria-pressed", active ? "true" : "false");
+        });
+
+        if (poster) {
+            poster.innerHTML = buildTimelinePoster(payload.title || "", payload.posterUrl || "");
+        }
+
+        if (status) {
+            status.textContent = payload.status || "";
+            status.classList.toggle("pill--aired", payload.statusKey === "aired");
+            status.classList.toggle("pill--upcoming", payload.statusKey !== "aired");
+        }
+
+        if (when) {
+            when.textContent = payload.when || "";
+        }
+
+        if (relative) {
+            relative.textContent = payload.relative || "";
+        }
+
+        if (title) {
+            title.textContent = payload.title || "";
+            title.href = payload.showUrl || "#";
+        }
+
+        if (episode) {
+            episode.textContent = [payload.episodeCode, payload.episodeName].filter(Boolean).join(" · ");
+        }
+
+        if (showLink) {
+            showLink.href = payload.showUrl || "#";
+        }
+
+        updateLink(tpbLink, payload.tpbUrl || "");
+        updateLink(btdigLink, payload.btdigUrl || "");
+    };
+
+    buttons.forEach((button) => {
+        button.addEventListener("click", () => activate(button));
+    });
+};
+
 document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll("[data-search-widget]").forEach(initSearchWidget);
     initCountdowns();
     document.querySelectorAll("[data-tabs]").forEach(initTabs);
     initAjaxTrackForms();
+    document.querySelectorAll("[data-episode-timeline]").forEach(initEpisodeTimeline);
 });
