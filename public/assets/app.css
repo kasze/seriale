@@ -1322,10 +1322,9 @@ body.theme--dark .episode-feed__time-note--yesterday {
 
 .timeline-day__events {
     display: flex;
+    flex-direction: column;
     gap: 8px;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    align-content: flex-start;
+    align-items: stretch;
     min-height: 42px;
 }
 
@@ -1334,6 +1333,7 @@ body.theme--dark .episode-feed__time-note--yesterday {
     z-index: 1;
     display: inline-flex;
     align-items: center;
+    width: 100%;
     max-width: 100%;
     min-height: 34px;
     padding: 8px 10px;
@@ -1368,10 +1368,16 @@ body.theme--dark .episode-feed__time-note--yesterday {
 
 .timeline-event__label {
     display: block;
-    max-width: 84px;
-    overflow: hidden;
-    text-overflow: clip;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
     white-space: nowrap;
+    scrollbar-width: none;
+}
+
+.timeline-event__label::-webkit-scrollbar {
+    display: none;
 }
 
 .timeline-preview {
