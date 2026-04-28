@@ -348,7 +348,6 @@ const renderTimelineEvent = (entry, selectedId) => `
         title="${escapeHtml(entry.title || "")}"
         aria-pressed="${selectedId === entry.id ? "true" : "false"}"
     >
-        <span class="timeline-event__dot"></span>
         <span class="timeline-event__label">${escapeHtml(entry.short_title || "Bez tytułu")}</span>
     </button>
 `;

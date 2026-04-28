@@ -146,6 +146,6 @@ final class DashboardService
             return $title;
         }
 
-        return rtrim(mb_substr($title, 0, $limit - 1)) . '…';
+        return rtrim(mb_substr($title, 0, $limit));
     }
 }

@@ -1240,6 +1240,13 @@ body.theme--dark .episode-feed__time-note--yesterday {
     color: var(--accent-ink);
 }
 
+.timeline-nav-button {
+    min-width: 46px;
+    padding-inline: 0;
+    font-size: 1.15rem;
+    font-weight: 800;
+}
+
 .timeline-card__head h2,
 .timeline-preview__body h3 {
     margin: 0;
@@ -1325,7 +1332,6 @@ body.theme--dark .episode-feed__time-note--yesterday {
     z-index: 1;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
     min-height: 34px;
     padding: 8px 12px;
     border-radius: 999px;
@@ -1357,29 +1363,12 @@ body.theme--dark .episode-feed__time-note--yesterday {
     background: rgba(238, 250, 246, 0.94);
 }
 
-.timeline-event__dot {
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    flex: 0 0 auto;
-}
-
 .timeline-event__label {
     display: block;
     max-width: 92px;
     overflow: hidden;
-    text-overflow: ellipsis;
+    text-overflow: clip;
     white-space: nowrap;
-}
-
-.timeline-event--aired .timeline-event__dot {
-    background: #d06d3a;
-    box-shadow: 0 0 0 5px rgba(208, 109, 58, 0.12);
-}
-
-.timeline-event--upcoming .timeline-event__dot {
-    background: #1d9d79;
-    box-shadow: 0 0 0 5px rgba(29, 157, 121, 0.12);
 }
 
 .timeline-preview {
