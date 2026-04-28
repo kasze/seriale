@@ -31,7 +31,7 @@ final class DashboardService
         ];
     }
 
-    public function timelineWindow(int $userId, int $startOffset = -4, int $days = 9): array
+    public function timelineWindow(int $userId, int $startOffset = -2, int $days = 8): array
     {
         $days = max(1, $days);
         $timezone = app('timezone');

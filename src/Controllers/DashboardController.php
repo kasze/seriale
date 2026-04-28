@@ -55,7 +55,7 @@ final class DashboardController extends Controller
             return Response::json(['status' => 'forbidden'], 403);
         }
 
-        $offset = (int) $request->query('offset', -4);
+        $offset = (int) $request->query('offset', -2);
         $timeline = $this->dashboard->timelineWindow((int) $user['id'], $offset);
 
         return Response::json([

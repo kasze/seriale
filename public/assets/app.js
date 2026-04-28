@@ -379,7 +379,7 @@ const initEpisodeTimeline = (root) => {
         return;
     }
 
-    let currentOffset = Number.parseInt(root.dataset.offset || "-4", 10) || -4;
+    let currentOffset = Number.parseInt(root.dataset.offset || "-2", 10) || -2;
     let selectedId = root.querySelector("[data-timeline-event].is-active")?.dataset.id || "";
 
     const updateLink = (link, href) => {
