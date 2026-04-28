@@ -404,6 +404,16 @@ const initEpisodeTimeline = (root) => {
         }
 
         const canOpenSources = entry.status_key === "aired";
+        const sourceLinks = canOpenSources
+            ? [
+                  entry.tpb_url
+                      ? `<a class="button button--ghost" href="${escapeHtml(entry.tpb_url)}" data-timeline-tpb data-open-external target="_blank" rel="noreferrer noopener">TPB</a>`
+                      : "",
+                  entry.btdig_url
+                      ? `<a class="button button--ghost" href="${escapeHtml(entry.btdig_url)}" data-timeline-btdig data-open-external target="_blank" rel="noreferrer noopener">BTDig</a>`
+                      : "",
+              ].join("")
+            : "";
 
         preview.classList.remove("is-empty");
         preview.innerHTML = `
@@ -422,8 +432,7 @@ const initEpisodeTimeline = (root) => {
                 <p data-timeline-episode>${escapeHtml([entry.episode_code, entry.episode_name].filter(Boolean).join(" · "))}</p>
                 <div class="timeline-preview__actions">
                     <a class="button button--primary" href="${escapeHtml(entry.show_url || "#")}" data-timeline-show>Przejdź do serialu</a>
-                    <a class="button button--ghost" href="${escapeHtml(entry.tpb_url || "")}" data-timeline-tpb data-open-external ${canOpenSources && entry.tpb_url ? "" : "hidden"} target="_blank" rel="noreferrer noopener">TPB</a>
-                    <a class="button button--ghost" href="${escapeHtml(entry.btdig_url || "")}" data-timeline-btdig data-open-external ${canOpenSources && entry.btdig_url ? "" : "hidden"} target="_blank" rel="noreferrer noopener">BTDig</a>
+                    ${sourceLinks}
                 </div>
             </div>
         `;

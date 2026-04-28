@@ -94,8 +94,12 @@ $timeline = $dashboard['timeline'] ?? [
                     <p data-timeline-episode><?= e((string) (($selected['episode_code'] ?? '') . ' · ' . ($selected['episode_name'] ?? ''))) ?></p>
                     <div class="timeline-preview__actions">
                         <a class="button button--primary" href="<?= e((string) ($selected['show_url'] ?? '#')) ?>" data-timeline-show>Przejdź do serialu</a>
-                        <a class="button button--ghost" href="<?= e((string) ($selected['tpb_url'] ?? '')) ?>" data-timeline-tpb data-open-external <?= (($selected['status_key'] ?? 'upcoming') !== 'aired' || ($selected['tpb_url'] ?? '') === '') ? 'hidden' : '' ?> target="_blank" rel="noreferrer noopener">TPB</a>
-                        <a class="button button--ghost" href="<?= e((string) ($selected['btdig_url'] ?? '')) ?>" data-timeline-btdig data-open-external <?= (($selected['status_key'] ?? 'upcoming') !== 'aired' || ($selected['btdig_url'] ?? '') === '') ? 'hidden' : '' ?> target="_blank" rel="noreferrer noopener">BTDig</a>
+                        <?php if (($selected['status_key'] ?? 'upcoming') === 'aired' && ($selected['tpb_url'] ?? '') !== ''): ?>
+                            <a class="button button--ghost" href="<?= e((string) $selected['tpb_url']) ?>" data-timeline-tpb data-open-external target="_blank" rel="noreferrer noopener">TPB</a>
+                        <?php endif; ?>
+                        <?php if (($selected['status_key'] ?? 'upcoming') === 'aired' && ($selected['btdig_url'] ?? '') !== ''): ?>
+                            <a class="button button--ghost" href="<?= e((string) $selected['btdig_url']) ?>" data-timeline-btdig data-open-external target="_blank" rel="noreferrer noopener">BTDig</a>
+                        <?php endif; ?>
                     </div>
                 </div>
             <?php else: ?>
