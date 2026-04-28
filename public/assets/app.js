@@ -419,8 +419,8 @@ const initEpisodeTimeline = (root) => {
                 <p data-timeline-episode>${escapeHtml([entry.episode_code, entry.episode_name].filter(Boolean).join(" · "))}</p>
                 <div class="timeline-preview__actions">
                     <a class="button button--primary" href="${escapeHtml(entry.show_url || "#")}" data-timeline-show>Przejdź do serialu</a>
-                    <a class="button button--ghost" href="${escapeHtml(entry.tpb_url || "")}" data-timeline-tpb ${entry.tpb_url ? "" : "hidden"} target="_blank" rel="noreferrer">TPB</a>
-                    <a class="button button--ghost" href="${escapeHtml(entry.btdig_url || "")}" data-timeline-btdig ${entry.btdig_url ? "" : "hidden"} target="_blank" rel="noreferrer">BTDig</a>
+                    <a class="button button--ghost" href="${escapeHtml(entry.tpb_url || "")}" data-timeline-tpb data-open-external ${entry.tpb_url ? "" : "hidden"} target="_blank" rel="noreferrer noopener">TPB</a>
+                    <a class="button button--ghost" href="${escapeHtml(entry.btdig_url || "")}" data-timeline-btdig data-open-external ${entry.btdig_url ? "" : "hidden"} target="_blank" rel="noreferrer noopener">BTDig</a>
                 </div>
             </div>
         `;
@@ -509,6 +509,24 @@ const initEpisodeTimeline = (root) => {
 
     nextButton.addEventListener("click", () => {
         loadTimeline(Number.parseInt(nextButton.dataset.offset || String(currentOffset + 7), 10));
+    });
+
+    preview.addEventListener("click", (event) => {
+        const link = event.target.closest("[data-open-external]");
+
+        if (!(link instanceof HTMLAnchorElement)) {
+            return;
+        }
+
+        const href = link.getAttribute("href") || "";
+
+        if (!href) {
+            event.preventDefault();
+            return;
+        }
+
+        event.preventDefault();
+        window.open(href, "_blank", "noopener,noreferrer");
     });
 
     bindEvents();
