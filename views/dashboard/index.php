@@ -2,7 +2,8 @@
 
 declare(strict_types=1);
 
-$today = new DateTimeImmutable('now', new DateTimeZone((string) app('timezone')));
+$timezone = app('timezone');
+$today = new DateTimeImmutable('now', $timezone);
 $timelineStart = $today->setTime(0, 0)->modify('-4 days');
 $timelineEnd = $today->setTime(23, 59, 59)->modify('+4 days');
 $timelineWeekdays = [1 => 'Pon', 2 => 'Wt', 3 => 'Śr', 4 => 'Czw', 5 => 'Pt', 6 => 'Sob', 7 => 'Niedz'];
@@ -29,7 +30,7 @@ foreach (array_merge($dashboard['recently_aired'], $dashboard['upcoming']) as $e
         continue;
     }
 
-    $localStamp = $stamp->setTimezone(new DateTimeZone((string) app('timezone')));
+    $localStamp = $stamp->setTimezone($timezone);
 
     if ($localStamp < $timelineStart || $localStamp > $timelineEnd) {
         continue;
