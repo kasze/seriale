@@ -21,8 +21,7 @@ $timeline = $dashboard['timeline'] ?? [
     >
         <div class="timeline-card__head">
             <div>
-                <h2>Oś odcinków</h2>
-                <p>Kliknij dzień lub odcinek. Zmieniaj zakres przyciskami, bez przewijania osi.</p>
+                <h2>Odcinki</h2>
             </div>
             <div class="timeline-card__nav">
                 <button type="button" class="button button--ghost" data-timeline-nav="prev" data-offset="<?= e((string) ($timeline['previous_offset'] ?? -13)) ?>">Wcześniej</button>
