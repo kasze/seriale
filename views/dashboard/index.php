@@ -51,6 +51,7 @@ foreach (array_merge($dashboard['recently_aired'], $dashboard['upcoming']) as $e
     $entry = [
         'id' => 'timeline-' . (string) ($episode['id'] ?? md5((string) ($episode['show_id_local'] ?? '') . $dayKey . $episodeCode)),
         'title' => (string) ($episode['title'] ?? ''),
+        'short_title' => truncate_text((string) ($episode['title'] ?? ''), 18),
         'show_url' => path_url('/shows/' . (string) ($episode['show_id_local'] ?? '')),
         'episode_code' => $episodeCode,
         'episode_name' => (string) ($episode['name'] ?? 'Bez tytułu'),
@@ -162,10 +163,11 @@ $renderEpisodeFeed = static function (array $episodes, string $mode): void {
                                         data-poster-url="<?= e($entry['poster_url']) ?>"
                                         data-tpb-url="<?= e($entry['tpb_url']) ?>"
                                         data-btdig-url="<?= e($entry['btdig_url']) ?>"
+                                        title="<?= e($entry['title']) ?>"
                                         aria-pressed="<?= $timelineSelected['id'] === $entry['id'] ? 'true' : 'false' ?>"
                                     >
                                         <span class="timeline-event__dot"></span>
-                                        <span class="timeline-event__code"><?= e($entry['episode_code']) ?></span>
+                                        <span class="timeline-event__label"><?= e($entry['short_title']) ?></span>
                                     </button>
                                 <?php endforeach; ?>
                             <?php endif; ?>

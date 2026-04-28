@@ -1374,6 +1374,14 @@ body.theme--dark .episode-feed__time-note--yesterday {
     flex: 0 0 auto;
 }
 
+.timeline-event__label {
+    display: block;
+    max-width: 92px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .timeline-event--aired .timeline-event__dot {
     background: #d06d3a;
     box-shadow: 0 0 0 5px rgba(208, 109, 58, 0.12);
