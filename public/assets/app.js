@@ -328,24 +328,60 @@ const buildTimelinePoster = (title, posterUrl) => {
     return `<div class="show-card__placeholder" aria-hidden="true">${escapeHtml(letter)}</div>`;
 };
 
-const initEpisodeTimeline = (root) => {
-    const buttons = Array.from(root.querySelectorAll("[data-timeline-event]"));
-    const preview = root.querySelector("[data-timeline-preview]");
-    const strip = root.querySelector(".timeline-strip");
+const renderTimelineEvent = (entry, selectedId) => `
+    <button
+        type="button"
+        class="timeline-event ${selectedId === entry.id ? "is-active" : ""} timeline-event--${escapeHtml(entry.status_key || "upcoming")}"
+        data-timeline-event
+        data-id="${escapeHtml(entry.id || "")}"
+        data-title="${escapeHtml(entry.title || "")}"
+        data-show-url="${escapeHtml(entry.show_url || "")}"
+        data-episode-code="${escapeHtml(entry.episode_code || "")}"
+        data-episode-name="${escapeHtml(entry.episode_name || "")}"
+        data-when="${escapeHtml(entry.when || "")}"
+        data-relative="${escapeHtml(entry.relative || "")}"
+        data-status="${escapeHtml(entry.status || "")}"
+        data-status-key="${escapeHtml(entry.status_key || "upcoming")}"
+        data-poster-url="${escapeHtml(entry.poster_url || "")}"
+        data-tpb-url="${escapeHtml(entry.tpb_url || "")}"
+        data-btdig-url="${escapeHtml(entry.btdig_url || "")}"
+        title="${escapeHtml(entry.title || "")}"
+        aria-pressed="${selectedId === entry.id ? "true" : "false"}"
+    >
+        <span class="timeline-event__dot"></span>
+        <span class="timeline-event__label">${escapeHtml(entry.short_title || "Bez tytułu")}</span>
+    </button>
+`;
 
-    if (!buttons.length || !preview || !strip) {
+const renderTimelineDay = (day, selectedId) => `
+    <section class="timeline-day ${day.is_today ? "timeline-day--today" : ""} ${(day.episodes || []).length ? "" : "timeline-day--empty"}">
+        <header class="timeline-day__head">
+            <span class="timeline-day__label">${escapeHtml(day.label || "")}</span>
+            <strong>${escapeHtml(day.day_number || "")}</strong>
+        </header>
+        <div class="timeline-day__rail"></div>
+        <div class="timeline-day__events">
+            ${(day.episodes || []).length
+                ? day.episodes.map((entry) => renderTimelineEvent(entry, selectedId)).join("")
+                : '<span class="timeline-day__empty">Brak</span>'}
+        </div>
+    </section>
+`;
+
+const initEpisodeTimeline = (root) => {
+    const preview = root.querySelector("[data-timeline-preview]");
+    const strip = root.querySelector("[data-timeline-strip]");
+    const endpoint = root.dataset.endpoint || "";
+    const range = root.querySelector("[data-timeline-range]");
+    const prevButton = root.querySelector('[data-timeline-nav="prev"]');
+    const nextButton = root.querySelector('[data-timeline-nav="next"]');
+
+    if (!preview || !strip || !endpoint || !range || !prevButton || !nextButton) {
         return;
     }
 
-    const poster = preview.querySelector("[data-timeline-poster]");
-    const status = preview.querySelector("[data-timeline-status]");
-    const when = preview.querySelector("[data-timeline-when]");
-    const relative = preview.querySelector("[data-timeline-relative]");
-    const title = preview.querySelector("[data-timeline-title]");
-    const episode = preview.querySelector("[data-timeline-episode]");
-    const showLink = preview.querySelector("[data-timeline-show]");
-    const tpbLink = preview.querySelector("[data-timeline-tpb]");
-    const btdigLink = preview.querySelector("[data-timeline-btdig]");
+    let currentOffset = Number.parseInt(root.dataset.offset || "-4", 10) || -4;
+    let selectedId = root.querySelector("[data-timeline-event].is-active")?.dataset.id || "";
 
     const updateLink = (link, href) => {
         if (!link) {
@@ -355,115 +391,128 @@ const initEpisodeTimeline = (root) => {
         if (href) {
             link.href = href;
             link.hidden = false;
+        } else {
+            link.hidden = true;
+        }
+    };
+
+    const setPreview = (entry) => {
+        if (!entry) {
+            preview.classList.add("is-empty");
+            preview.innerHTML = '<div class="empty-state empty-state--soft timeline-preview__empty" data-timeline-empty>Brak odcinków w tym zakresie. Zmień zakres przyciskami powyżej.</div>';
             return;
         }
 
-        link.hidden = true;
+        preview.classList.remove("is-empty");
+        preview.innerHTML = `
+            <div class="timeline-preview__poster" data-timeline-poster>
+                ${buildTimelinePoster(entry.title || "", entry.poster_url || "")}
+            </div>
+            <div class="timeline-preview__body">
+                <div class="timeline-preview__meta">
+                    <span class="pill ${entry.status_key === "aired" ? "pill--aired" : "pill--upcoming"}" data-timeline-status>${escapeHtml(entry.status || "")}</span>
+                    <span data-timeline-when>${escapeHtml(entry.when || "")}</span>
+                    <strong data-timeline-relative>${escapeHtml(entry.relative || "")}</strong>
+                </div>
+                <h3>
+                    <a href="${escapeHtml(entry.show_url || "#")}" data-timeline-title>${escapeHtml(entry.title || "")}</a>
+                </h3>
+                <p data-timeline-episode>${escapeHtml([entry.episode_code, entry.episode_name].filter(Boolean).join(" · "))}</p>
+                <div class="timeline-preview__actions">
+                    <a class="button button--primary" href="${escapeHtml(entry.show_url || "#")}" data-timeline-show>Przejdź do serialu</a>
+                    <a class="button button--ghost" href="${escapeHtml(entry.tpb_url || "")}" data-timeline-tpb ${entry.tpb_url ? "" : "hidden"} target="_blank" rel="noreferrer">TPB</a>
+                    <a class="button button--ghost" href="${escapeHtml(entry.btdig_url || "")}" data-timeline-btdig ${entry.btdig_url ? "" : "hidden"} target="_blank" rel="noreferrer">BTDig</a>
+                </div>
+            </div>
+        `;
     };
 
-    const activate = (button) => {
-        const payload = button.dataset;
+    const bindEvents = () => {
+        strip.querySelectorAll("[data-timeline-event]").forEach((button) => {
+            button.addEventListener("click", () => {
+                selectedId = button.dataset.id || "";
+                strip.querySelectorAll("[data-timeline-event]").forEach((item) => {
+                    const active = item === button;
+                    item.classList.toggle("is-active", active);
+                    item.setAttribute("aria-pressed", active ? "true" : "false");
+                });
 
-        buttons.forEach((item) => {
-            const active = item === button;
-            item.classList.toggle("is-active", active);
-            item.setAttribute("aria-pressed", active ? "true" : "false");
+                setPreview({
+                    id: button.dataset.id || "",
+                    title: button.dataset.title || "",
+                    show_url: button.dataset.showUrl || "",
+                    episode_code: button.dataset.episodeCode || "",
+                    episode_name: button.dataset.episodeName || "",
+                    when: button.dataset.when || "",
+                    relative: button.dataset.relative || "",
+                    status: button.dataset.status || "",
+                    status_key: button.dataset.statusKey || "upcoming",
+                    poster_url: button.dataset.posterUrl || "",
+                    tpb_url: button.dataset.tpbUrl || "",
+                    btdig_url: button.dataset.btdigUrl || "",
+                });
+            });
         });
-
-        if (poster) {
-            poster.innerHTML = buildTimelinePoster(payload.title || "", payload.posterUrl || "");
-        }
-
-        if (status) {
-            status.textContent = payload.status || "";
-            status.classList.toggle("pill--aired", payload.statusKey === "aired");
-            status.classList.toggle("pill--upcoming", payload.statusKey !== "aired");
-        }
-
-        if (when) {
-            when.textContent = payload.when || "";
-        }
-
-        if (relative) {
-            relative.textContent = payload.relative || "";
-        }
-
-        if (title) {
-            title.textContent = payload.title || "";
-            title.href = payload.showUrl || "#";
-        }
-
-        if (episode) {
-            episode.textContent = [payload.episodeCode, payload.episodeName].filter(Boolean).join(" · ");
-        }
-
-        if (showLink) {
-            showLink.href = payload.showUrl || "#";
-        }
-
-        updateLink(tpbLink, payload.tpbUrl || "");
-        updateLink(btdigLink, payload.btdigUrl || "");
     };
 
-    buttons.forEach((button) => {
-        button.addEventListener("click", () => activate(button));
-    });
+    const renderTimeline = (timeline) => {
+        currentOffset = Number.parseInt(timeline.start_offset ?? currentOffset, 10) || currentOffset;
+        root.dataset.offset = String(currentOffset);
+        range.textContent = timeline.window_label || "";
+        prevButton.dataset.offset = String(timeline.previous_offset ?? currentOffset - 9);
+        nextButton.dataset.offset = String(timeline.next_offset ?? currentOffset + 9);
 
-    strip.addEventListener(
-        "wheel",
-        (event) => {
-            if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) {
-                return;
+        const selected = timeline.selected || null;
+        selectedId = selected?.id || "";
+        strip.innerHTML = (timeline.days || []).map((day) => renderTimelineDay(day, selectedId)).join("");
+        setPreview(selected);
+        bindEvents();
+    };
+
+    const loadTimeline = async (offset) => {
+        if (root.dataset.loading === "true") {
+            return;
+        }
+
+        root.dataset.loading = "true";
+        preview.classList.add("is-loading");
+        prevButton.disabled = true;
+        nextButton.disabled = true;
+
+        try {
+            const response = await fetch(`${endpoint}?format=json&offset=${encodeURIComponent(offset)}`, {
+                headers: {
+                    Accept: "application/json",
+                },
+                credentials: "same-origin",
+            });
+
+            const payload = await response.json().catch(() => ({}));
+
+            if (!response.ok || payload.status !== "ok" || !payload.timeline) {
+                throw new Error(payload.message || "Nie udało się wczytać osi czasu.");
             }
 
-            event.preventDefault();
-            strip.scrollBy({
-                left: event.deltaY,
-            });
-        },
-        { passive: false }
-    );
-
-    let pointerId = null;
-    let dragStartX = 0;
-    let scrollStartX = 0;
-
-    strip.addEventListener("pointerdown", (event) => {
-        if (event.pointerType === "mouse" && event.button !== 0) {
-            return;
-        }
-
-        pointerId = event.pointerId;
-        dragStartX = event.clientX;
-        scrollStartX = strip.scrollLeft;
-        strip.classList.add("is-dragging");
-        strip.setPointerCapture(event.pointerId);
-    });
-
-    strip.addEventListener("pointermove", (event) => {
-        if (pointerId !== event.pointerId) {
-            return;
-        }
-
-        const delta = event.clientX - dragStartX;
-        strip.scrollLeft = scrollStartX - delta;
-    });
-
-    const stopDragging = (event) => {
-        if (pointerId !== event.pointerId) {
-            return;
-        }
-
-        pointerId = null;
-        strip.classList.remove("is-dragging");
-
-        if (strip.hasPointerCapture(event.pointerId)) {
-            strip.releasePointerCapture(event.pointerId);
+            renderTimeline(payload.timeline);
+        } catch (error) {
+            window.alert(error instanceof Error ? error.message : "Nie udało się wczytać osi czasu.");
+        } finally {
+            root.dataset.loading = "false";
+            preview.classList.remove("is-loading");
+            prevButton.disabled = false;
+            nextButton.disabled = false;
         }
     };
 
-    strip.addEventListener("pointerup", stopDragging);
-    strip.addEventListener("pointercancel", stopDragging);
+    prevButton.addEventListener("click", () => {
+        loadTimeline(Number.parseInt(prevButton.dataset.offset || String(currentOffset - 9), 10));
+    });
+
+    nextButton.addEventListener("click", () => {
+        loadTimeline(Number.parseInt(nextButton.dataset.offset || String(currentOffset + 9), 10));
+    });
+
+    bindEvents();
 };
 
 document.addEventListener("DOMContentLoaded", () => {

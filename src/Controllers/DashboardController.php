@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Core\Request;
+use App\Core\Response;
 use App\Repositories\UserRepository;
 use App\Services\AuthService;
 use App\Services\DashboardService;
@@ -43,6 +44,23 @@ final class DashboardController extends Controller
             'sort' => $sort,
             'dashboard' => $data,
             'user' => $user,
+        ]);
+    }
+
+    public function timeline(Request $request): Response
+    {
+        $user = $this->auth->currentUser();
+
+        if ($user === null) {
+            return Response::json(['status' => 'forbidden'], 403);
+        }
+
+        $offset = (int) $request->query('offset', -4);
+        $timeline = $this->dashboard->timelineWindow((int) $user['id'], $offset);
+
+        return Response::json([
+            'status' => 'ok',
+            'timeline' => $timeline,
         ]);
     }
 }

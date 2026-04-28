@@ -32,6 +32,7 @@ $router->get('/logout', [AuthController::class, 'logout']);
 $router->post('/logout', [AuthController::class, 'logout'], true);
 
 $router->get('/dashboard', [DashboardController::class, 'index'], true);
+$router->get('/dashboard/timeline', [DashboardController::class, 'timeline'], true);
 $router->get('/top', [TopController::class, 'index'], true);
 $router->get('/shows/search', [ShowController::class, 'search'], true);
 $router->post('/tracked', [ShowController::class, 'addTracked'], true);

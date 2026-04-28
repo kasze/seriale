@@ -223,6 +223,34 @@ final class TrackedShowRepository extends BaseRepository
         return $statement->fetchAll();
     }
 
+    public function listEpisodesBetween(int $userId, string $from, string $to): array
+    {
+        $sql = '
+            SELECT
+                e.*,
+                s.`title`,
+                s.`poster_url`,
+                s.`status`,
+                s.`id` AS `show_id_local`
+            FROM ' . $this->table('episodes') . ' e
+            INNER JOIN ' . $this->table('shows') . ' s ON s.`id` = e.`show_id`
+            INNER JOIN ' . $this->table('tracked_shows') . ' t ON t.`show_id` = s.`id`
+            WHERE t.`user_id` = :user_id
+              AND e.`airstamp` IS NOT NULL
+              AND e.`airstamp` >= :from_date
+              AND e.`airstamp` <= :to_date
+            ORDER BY e.`airstamp` ASC, s.`title_sort` ASC';
+
+        $statement = $this->pdo->prepare($sql);
+        $statement->execute([
+            'user_id' => $userId,
+            'from_date' => $this->normalizeDateTime($from),
+            'to_date' => $this->normalizeDateTime($to),
+        ]);
+
+        return $statement->fetchAll();
+    }
+
     public function listBacklog(int $userId): array
     {
         $sql = '
