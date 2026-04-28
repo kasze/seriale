@@ -333,8 +333,6 @@ const renderSeasonProgress = (seasonProgress) => {
         return "";
     }
 
-    const selected = seasonProgress.selected || seasonProgress.markers[0];
-
     return `
         <div class="season-progress season-progress--compact" data-season-progress>
             <div class="season-progress__head">
@@ -342,35 +340,20 @@ const renderSeasonProgress = (seasonProgress) => {
                     <h3>${escapeHtml(seasonProgress.season_name || "Sezon")}</h3>
                     <p>${escapeHtml(`${seasonProgress.aired_count || 0} z ${seasonProgress.total_count || 0} odcinków wyemitowanych`)}</p>
                 </div>
-                <span class="pill pill--muted">${escapeHtml(String(seasonProgress.total_count || 0))} odc.</span>
             </div>
             <div class="season-progress__track" role="list" aria-label="Przebieg sezonu">
                 ${(seasonProgress.markers || [])
                     .map(
                         (marker) => `
-                            <button
-                                type="button"
-                                class="season-progress__marker season-progress__marker--${escapeHtml(marker.status_key || "upcoming")} ${selected.id === marker.id ? "is-active" : ""} ${marker.is_latest ? "is-latest" : ""} ${marker.is_next ? "is-next" : ""}"
-                                data-season-marker
-                                data-id="${escapeHtml(marker.id || "")}"
-                                data-code="${escapeHtml(marker.full_code || "")}"
-                                data-title="${escapeHtml(marker.title || "")}"
-                                data-date="${escapeHtml(marker.date || "")}"
-                                data-relative="${escapeHtml(marker.relative || "")}"
-                                data-status="${escapeHtml(marker.status || "")}"
-                                aria-pressed="${selected.id === marker.id ? "true" : "false"}"
+                            <span
+                                class="season-progress__marker season-progress__marker--${escapeHtml(marker.status_key || "upcoming")} ${marker.is_latest ? "is-latest" : ""} ${marker.is_next ? "is-next" : ""}"
+                                title="${escapeHtml([marker.full_code, marker.title, marker.date, marker.relative, marker.status].filter(Boolean).join(" · "))}"
                             >
                                 <span>${escapeHtml(marker.code || "")}</span>
-                            </button>
+                            </span>
                         `
                     )
                     .join("")}
-            </div>
-            <div class="season-progress__detail" data-season-detail>
-                <strong data-season-detail-code>${escapeHtml(selected.full_code || "")}</strong>
-                <span data-season-detail-title>${escapeHtml(selected.title || "")}</span>
-                <span data-season-detail-date>${escapeHtml([selected.date, selected.relative].filter(Boolean).join(" · "))}</span>
-                <span class="pill ${(selected.status_key || "upcoming") === "aired" ? "pill--aired" : "pill--upcoming"}" data-season-detail-status>${escapeHtml(selected.status || "")}</span>
             </div>
         </div>
     `;
@@ -533,7 +516,6 @@ const initEpisodeTimeline = (root) => {
             </div>
         `;
 
-        preview.querySelectorAll("[data-season-progress]").forEach(initSeasonProgress);
     };
 
     const bindEvents = () => {
@@ -654,57 +636,10 @@ const initEpisodeTimeline = (root) => {
     todayButton.hidden = currentOffset === -2;
 };
 
-const initSeasonProgress = (root) => {
-    const markers = Array.from(root.querySelectorAll("[data-season-marker]"));
-    const detail = root.querySelector("[data-season-detail]");
-
-    if (!markers.length || !detail) {
-        return;
-    }
-
-    const code = detail.querySelector("[data-season-detail-code]");
-    const title = detail.querySelector("[data-season-detail-title]");
-    const date = detail.querySelector("[data-season-detail-date]");
-    const status = detail.querySelector("[data-season-detail-status]");
-
-    const activate = (marker) => {
-        markers.forEach((item) => {
-            const active = item === marker;
-            item.classList.toggle("is-active", active);
-            item.setAttribute("aria-pressed", active ? "true" : "false");
-        });
-
-        if (code) {
-            code.textContent = marker.dataset.code || "";
-        }
-
-        if (title) {
-            title.textContent = marker.dataset.title || "";
-        }
-
-        if (date) {
-            date.textContent = [marker.dataset.date, marker.dataset.relative].filter(Boolean).join(" · ");
-        }
-
-        if (status) {
-            status.textContent = marker.dataset.status || "";
-            const aired = marker.classList.contains("season-progress__marker--aired");
-            status.classList.toggle("pill--aired", aired);
-            status.classList.toggle("pill--upcoming", !aired);
-        }
-    };
-
-    markers.forEach((marker) => {
-        marker.addEventListener("click", () => activate(marker));
-        marker.addEventListener("focus", () => activate(marker));
-    });
-};
-
 document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll("[data-search-widget]").forEach(initSearchWidget);
     initCountdowns();
     document.querySelectorAll("[data-tabs]").forEach(initTabs);
     initAjaxTrackForms();
     document.querySelectorAll("[data-episode-timeline]").forEach(initEpisodeTimeline);
-    document.querySelectorAll("[data-season-progress]").forEach(initSeasonProgress);
 });
