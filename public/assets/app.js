@@ -416,6 +416,52 @@ const renderTimelineDay = (day, selectedId) => `
     </section>
 `;
 
+const initTimelineLabelScroll = (root) => {
+    root.querySelectorAll(".timeline-event__label").forEach((label) => {
+        if (label.dataset.scrollReady === "true") {
+            return;
+        }
+
+        label.dataset.scrollReady = "true";
+        let hoverTimer = null;
+
+        const reset = () => {
+            if (hoverTimer) {
+                window.clearTimeout(hoverTimer);
+                hoverTimer = null;
+            }
+
+            label.scrollTo({
+                left: 0,
+                behavior: "smooth",
+            });
+        };
+
+        const start = () => {
+            if (label.scrollWidth <= label.clientWidth + 4) {
+                return;
+            }
+
+            if (hoverTimer) {
+                window.clearTimeout(hoverTimer);
+            }
+
+            hoverTimer = window.setTimeout(() => {
+                label.scrollTo({
+                    left: label.scrollWidth - label.clientWidth,
+                    behavior: "smooth",
+                });
+            }, 180);
+        };
+
+        const trigger = label.closest(".timeline-event") || label;
+        trigger.addEventListener("mouseenter", start);
+        trigger.addEventListener("focus", start, true);
+        trigger.addEventListener("mouseleave", reset);
+        trigger.addEventListener("blur", reset, true);
+    });
+};
+
 const initEpisodeTimeline = (root) => {
     const preview = root.querySelector("[data-timeline-preview]");
     const strip = root.querySelector("[data-timeline-strip]");
@@ -517,6 +563,8 @@ const initEpisodeTimeline = (root) => {
                 });
             });
         });
+
+        initTimelineLabelScroll(strip);
     };
 
     const renderTimeline = (timeline) => {
