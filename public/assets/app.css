@@ -1397,9 +1397,16 @@ body.theme--dark .episode-feed__time-note--yesterday {
     min-width: 0;
     width: 100%;
     max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    overflow-x: auto;
+    overflow-y: hidden;
     white-space: nowrap;
+    text-overflow: clip;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+}
+
+.timeline-event__label::-webkit-scrollbar {
+    display: none;
 }
 
 .timeline-preview {
